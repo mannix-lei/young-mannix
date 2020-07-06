@@ -14,7 +14,6 @@ const Login: FC = (props) => {
     const [userName, setuserName] = useState('');
     const [password, setpassword] = useState('');
     const { setAuthTokens } = useAuth();
-
     const login = async () => {
         // await
     };
@@ -23,24 +22,19 @@ const Login: FC = (props) => {
 
     if (isLoggedIn) return <Redirect to="/" />;
     const onFinish = (values: Store) => {
-        console.log('====================================')
-        console.log(values)
-        console.log('====================================')
-    }
+        console.log('====================================');
+        console.log(values);
+        console.log('====================================');
+    };
     const remember = () => {
-        console.log('====================================')
-        console.log(userName, password)
-        console.log('====================================')
-    }
+        console.log('====================================');
+        console.log(userName, password);
+        console.log('====================================');
+    };
     return (
         <div>
             <Card title="Login" bordered={false}>
-                <Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                >
+                <Form {...layout} name="basic" initialValues={{ remember: true }} onFinish={onFinish}>
                     <Form.Item
                         label="Username"
                         name="username"
