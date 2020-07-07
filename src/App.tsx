@@ -14,14 +14,14 @@ const App = () => {
     const setTokens = (data: object) => {
         localStorage.setItem('tokens', JSON.stringify(data));
         setAuthTokens(data);
-    }
+    };
     return (
         <AuthContext.Provider value={{ authTokens, setAuthTokens: setTokens }}>
             <Router>
-                <Route exact path='/' component={Home} />
-                <Route exact path='/login' component={Login} />
-                <Route exact path='/signUp' component={SignUp} />
-                <PrivateRoute path='/list' Component={SongsList} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/signUp" component={SignUp} />
+                <PrivateRoute path="/" Component={Home} />
+                <PrivateRoute path="/list" Component={SongsList} />
             </Router>
         </AuthContext.Provider>
     );
