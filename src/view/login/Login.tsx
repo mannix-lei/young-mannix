@@ -5,31 +5,38 @@ import { Card, Form, Input, Checkbox, Button } from 'antd';
 import style from './Login.module.scss';
 import ReactCanvasNest from 'react-canvas-nest';
 import { login } from '../../service/login-service';
+import { validEmail } from '../../utils/validators';
 
 const layout = {
     labelCol: { span: 5 },
 };
-interface IProps {}
-const Login: FC = (props) => {
+interface IProps {
+    [x: string]: any;
+}
+const Login: FC = (props: IProps) => {
     const [form] = Form.useForm();
     const [isLoggedIn, setLoggedIn] = useState(false);
     const { setAuthTokens } = useAuth();
-    // const referer = props.location.state.referer || '/';
+    const referer = ((props.location || {}).state || {}).referer || '/';
 
-    form.setFieldsValue({ username: localStorage.getItem('username'), password: localStorage.getItem('password') });
-    if (isLoggedIn) {
-        return <Redirect to="/" />;
-    }
-    const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
+    form.setFieldsValue({ email: localStorage.getItem('email'), password: localStorage.getItem('password') });
+
+    const onFinish = async (values: { email: string; password: string; remember: boolean }) => {
         if (values.remember) {
-            localStorage.setItem('username', values.username);
+            localStorage.setItem('email', values.email);
             localStorage.setItem('password', values.password);
         } else {
-            localStorage.setItem('username', '');
+            localStorage.setItem('email', '');
             localStorage.setItem('password', '');
         }
-        login(values.username, values.password, values.remember);
+        const { token } = await login(values.email, values.password, values.remember);
+        setAuthTokens({ token });
+        setLoggedIn(true);
     };
+
+    if (isLoggedIn) {
+        return <Redirect to={referer.pathname || '/'} />;
+    }
 
     return (
         <div className={style.body}>
@@ -41,13 +48,13 @@ const Login: FC = (props) => {
                     name="basic"
                     initialValues={{ remember: true }}
                     onFinish={(store) =>
-                        onFinish({ username: store.username, password: store.password, remember: store.remember })
+                        onFinish({ email: store.email, password: store.password, remember: store.remember })
                     }
                 >
                     <Form.Item
-                        label="Username"
-                        name="username"
-                        rules={[{ required: true, message: 'Please input your username!' }]}
+                        label="E-mail"
+                        name="email"
+                        rules={[validEmail, { required: true, message: 'Please input your email!' }]}
                     >
                         <Input />
                     </Form.Item>

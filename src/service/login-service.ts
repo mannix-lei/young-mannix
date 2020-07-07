@@ -5,6 +5,9 @@ import service from './index';
  * @param name
  * @param password
  */
-export const login = (name: string, password: string, remember: boolean) => {
-    service.post('/login', { name, password, remember });
+export const login = async (name: string, password: string, remember: boolean) => {
+    // return service.post('/login', { name, password, remember });
+    return {
+        token: '234234234',
+    };
 };
