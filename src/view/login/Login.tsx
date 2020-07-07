@@ -2,39 +2,48 @@ import React, { FC, useState } from 'react';
 import { useAuth } from '../common/header/Auth';
 import { Redirect } from 'react-router';
 import { Card, Form, Input, Checkbox, Button } from 'antd';
-import { Store } from 'antd/lib/form/interface';
+import style from './Login.module.scss';
+import ReactCanvasNest from 'react-canvas-nest';
+import { login } from '../../service/login-service';
 
 const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 5 },
 };
 interface IProps {}
 const Login: FC = (props) => {
+    const [form] = Form.useForm();
     const [isLoggedIn, setLoggedIn] = useState(false);
-    const [userName, setuserName] = useState('');
-    const [password, setpassword] = useState('');
     const { setAuthTokens } = useAuth();
-    const login = async () => {
-        // await
-    };
-
     // const referer = props.location.state.referer || '/';
 
-    if (isLoggedIn) return <Redirect to="/" />;
-    const onFinish = (values: Store) => {
-        console.log('====================================');
-        console.log(values);
-        console.log('====================================');
+    form.setFieldsValue({ username: localStorage.getItem('username'), password: localStorage.getItem('password') });
+    if (isLoggedIn) {
+        return <Redirect to="/" />;
+    }
+    const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
+        if (values.remember) {
+            localStorage.setItem('username', values.username);
+            localStorage.setItem('password', values.password);
+        } else {
+            localStorage.setItem('username', '');
+            localStorage.setItem('password', '');
+        }
+        login(values.username, values.password, values.remember);
     };
-    const remember = () => {
-        console.log('====================================');
-        console.log(userName, password);
-        console.log('====================================');
-    };
+
     return (
-        <div>
-            <Card title="Login" bordered={false}>
-                <Form {...layout} name="basic" initialValues={{ remember: true }} onFinish={onFinish}>
+        <div className={style.body}>
+            <ReactCanvasNest config={{ count: 50 }} style={{ zIndex: 0 }} />
+            <Card title="Login" bordered={false} className={style.login}>
+                <Form
+                    {...layout}
+                    form={form}
+                    name="basic"
+                    initialValues={{ remember: true }}
+                    onFinish={(store) =>
+                        onFinish({ username: store.username, password: store.password, remember: store.remember })
+                    }
+                >
                     <Form.Item
                         label="Username"
                         name="username"
@@ -52,7 +61,7 @@ const Login: FC = (props) => {
                     </Form.Item>
 
                     <Form.Item name="remember" valuePropName="checked">
-                        <Checkbox onClick={() => remember}>Remember me</Checkbox>
+                        <Checkbox>Remember me</Checkbox>
                     </Form.Item>
 
                     <Form.Item>
