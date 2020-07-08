@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react';
-import { useAuth } from '../common/header/Auth';
+import { useAuth } from '../common/Auth';
 import { Redirect } from 'react-router';
 import { Card, Form, Input, Checkbox, Button } from 'antd';
 import style from './Login.module.scss';
 import ReactCanvasNest from 'react-canvas-nest';
-import { login } from '../../service/login-service';
+import { login } from '../../service/login';
 import { validEmail } from '../../utils/validators';
 
 const layout = {

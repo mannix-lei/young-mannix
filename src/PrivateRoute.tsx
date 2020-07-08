@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route, RouteComponentProps, Redirect } from 'react-router-dom';
-import { useAuth } from './view/common/header/Auth';
+import { Route, RouteComponentProps, Redirect, Switch } from 'react-router-dom';
+import { useAuth } from './view/common/Auth';
 import HeaderLayout from '../src/view/common/header/Header';
 
 interface IProps {
@@ -11,7 +11,8 @@ interface IProps {
 const PrivateRoute = ({ Component, ...rest }: IProps) => {
     const { authTokens } = useAuth();
     return (
-        <Route
+        <Switch>
+            <Route
             {...rest}
             render={(props) =>
                 authTokens ? (
@@ -23,6 +24,7 @@ const PrivateRoute = ({ Component, ...rest }: IProps) => {
                 )
             }
         />
+        </Switch>
     );
 };
 

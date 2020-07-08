@@ -1,5 +1,5 @@
 import service from './index';
-import { ISong } from '../view/pages/songs-list/Songs-List';
+import { ISong } from '../redux/modules/songs';
 
 /**
  * fetch song list
@@ -8,12 +8,14 @@ import { ISong } from '../view/pages/songs-list/Songs-List';
  */
 export const getSongsList = async (
     provider: string,
-    keyword: string
+    keyword: string,
+    page: number,
 ): Promise<{ songs: ISong[]; totalCount: number }> => {
     return await service.get('/search', {
         params: {
             provider,
             keyword,
+            page,
         },
     });
 };
@@ -23,6 +25,6 @@ export const getSongsList = async (
  * @param platform
  * @param id
  */
-export const playSong = async (platform: string, id: string) => {
+export const playSong = async (platform: string, id: string): Promise<{ songSource: string }> => {
     return await service.get(`/song_source/${platform}/${id}`);
 };
