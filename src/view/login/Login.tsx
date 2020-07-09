@@ -35,8 +35,7 @@ const Login: FC = (props: IProps) => {
     };
 
     if (isLoggedIn) {
-        // return <Redirect to={referer.pathname || '/list'} />;
-        return <Redirect to={'/list'} />;
+        return <Redirect to={referer.pathname || '/'} />;
     }
 
     return (
