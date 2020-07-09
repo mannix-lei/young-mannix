@@ -21,7 +21,7 @@ ADD nginx.conf /usr/local/nginx/conf/
 #ADD RESOUCES 添加静态资源
 RUN rm /usr/local/nginx/html/index.html
 RUN mkdir -p /usr/local/nginx/html/static
-COPY dist/ /usr/local/nginx/html/static
+COPY build/ /usr/local/nginx/html/static
  
 #EXPOSE 映射端口
 EXPOSE 7070
