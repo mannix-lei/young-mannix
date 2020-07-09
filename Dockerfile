@@ -16,7 +16,7 @@ RUN ln -s /usr/local/nginx/sbin/* /usr/local/sbin/
  
 #REPLACE CONF 替换配置文件
 RUN rm /usr/local/nginx/conf/nginx.conf
-ADD conf/nginx.conf /usr/local/nginx/conf/
+ADD nginx.conf /usr/local/nginx/conf/
  
 #ADD RESOUCES 添加静态资源
 RUN rm /usr/local/nginx/html/index.html
