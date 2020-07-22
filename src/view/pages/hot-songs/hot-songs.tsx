@@ -1,13 +1,13 @@
-import React, { FC, useState, useEffect } from 'react';
-import { playSong, initHotSong } from '../../../service/songs';
-import { Table, Skeleton } from 'antd';
-import { songsColumn } from './columns';
+import { FC, useState, useEffect } from 'react';
+import { Skeleton, Table } from 'antd';
+import React from 'react';
 import ReactAudioPlayer from 'react-audio-player';
-import { ISong } from '../../../redux/modules/songs';
 import { RootState } from '../../../redux';
-import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getSongsList } from '../../../redux/modules/songs';
+import { getSongsList, ISong } from '../../../redux/modules/songs';
+import { initHotSong, playSong } from '../../../service/songs';
+import { songsColumn } from '../songs-list/columns';
+import { connect } from 'react-redux';
 
 const mapStateToProps = (state: RootState) => ({
     list: state.song,
@@ -20,10 +20,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         dispatch
     );
 };
-
 type IProps = ReturnType<typeof mapStateToProps> &
     ReturnType<typeof mapDispatchToProps>;
-const SongsList: FC<IProps> = (props) => {
+const HotSongs: FC<IProps> = (props) => {
     const [list, setlist] = useState<ISong[]>([]);
     const [total, settotal] = useState(0);
     const [currentSongUrl, setcurrentSongUrl] = useState('');
@@ -32,13 +31,15 @@ const SongsList: FC<IProps> = (props) => {
 
     const initList = async () => {
         setloading(true);
-        await initHotSong().then(res => {
-            setlist(res.songs);
-            settotal(res.totalCount);
-            setloading(false);
-        }).catch(() => {
-            setloading(false);
-        })
+        await initHotSong()
+            .then((res) => {
+                setlist(res.songs);
+                settotal(res.totalCount);
+                setloading(false);
+            })
+            .catch(() => {
+                setloading(false);
+            });
     };
     useEffect(() => {
         initList();
@@ -52,20 +53,29 @@ const SongsList: FC<IProps> = (props) => {
     const columns = songsColumn(play);
 
     const changeSize = (page: number) => {
-        props.getSongsList({ provider: 'netease',  page });
+        props.getSongsList({ provider: 'netease', page });
     };
-
     return (
         <div>
             <Skeleton active loading={loading}>
                 <Table
                     columns={columns}
                     dataSource={list}
-                    pagination={{ total, onChange: changeSize, showSizeChanger: false }}
+                    pagination={{
+                        total,
+                        onChange: changeSize,
+                        showSizeChanger: false,
+                    }}
                 />
             </Skeleton>
-            <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted} />
+            <ReactAudioPlayer
+                src={currentSongUrl}
+                autoPlay
+                controls
+                muted={meted}
+            />
         </div>
     );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SongsList);
+
+export default connect(mapStateToProps, mapDispatchToProps)(HotSongs);

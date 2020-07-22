@@ -1,4 +1,5 @@
 import { typedAction } from '../helpers';
+import { initSongsList } from '../../service/songs';
 
 export interface ISong {
     originalId: string;
@@ -19,32 +20,33 @@ export interface IAlbum {
 
 export interface ISongState {
     songsList: ISong[];
-    loading: boolean;
+    total: number;
 }
 
 const initState: ISongState = {
     songsList: [],
-    loading: false,
+    total: 0,
 };
 
-interface ISongQuery {
-    provider: string;
-    keyword: string;
-    page: number;
+export interface ISongQuery {
+    provider?: string;
+    keyword?: string;
+    page?: number;
 }
 
-const getSongsList = (query: ISongQuery) => {
+export const getSongsList = async (query: ISongQuery) => {
+    await initSongsList(query).then(res => {
+        initState.total = res.totalCount;
+        initState.songsList = res.songs;
+    });
     return typedAction('songs/GET_SONGS_LIST', query);
 };
 
 type SongAction = ReturnType<typeof getSongsList>;
-export const songReducer = (state = initState, action: SongAction) => {
-    switch (action.type) {
+export const songReducer = async (state = initState, action: SongAction) => {
+    switch ((await action).type) {
         case 'songs/GET_SONGS_LIST':
-            return {
-                ...state,
-                songsList: [...state.songsList],
-            };
+            return { list: state.songsList, total: state.total };
         default:
             return state;
     }

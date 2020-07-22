@@ -19,10 +19,10 @@ const HeaderLayout: FC = (props: IProps) => {
         <Layout className={style.layout}>
             <Header>
                 <div className={style.avator}></div>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[menuType.最新音乐]}>
+                {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[menuType.最新音乐]}>
                     <Menu.Item key={menuType.最新音乐}>最新音乐</Menu.Item>
                     <Menu.Item key={menuType.歌单}>歌单</Menu.Item>
-                </Menu>
+                </Menu> */}
                 <SongsForm style={{ flexGrow: 0.6, marginLeft: '50px', marginTop: '15px' }}/>
                 <Avatar style={{ backgroundColor: '#87d068', marginTop: '15px' }} icon={<UserOutlined />} />
             </Header>

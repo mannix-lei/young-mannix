@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from '../src/view/login/Login';
 import { AuthContext } from './view/common/Auth';
 import PrivateRoute from './PrivateRoute';
-import SongsList from '../src/view/pages/songs-list/Songs-List';
+import SongsList from './view/pages/songs-list/songs-List';
 import Home from './view/home/Home';
 import SignUp from './view/sign-up/sign-up';
+import HotSongs from './view/pages/hot-songs/hot-songs';
 
 const App = () => {
     const existingTokens = JSON.parse(localStorage.getItem('tokens')!);
@@ -24,6 +25,7 @@ const App = () => {
                     <PrivateRoute path="/" Component={Home} />
                 </Switch>
                 <PrivateRoute path="/list" Component={SongsList} />
+                <PrivateRoute path="/hot" Component={HotSongs} />
             </Router>
         </AuthContext.Provider>
     );
