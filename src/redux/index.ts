@@ -1,7 +1,16 @@
-import { songReducer } from './modules/songs';
-import { combineReducers } from 'redux';
-import { userReducer } from './modules/user';
-import { songFormReducer} from './modules/song-form';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { userReducer } from './reducer/user';
+import { songReducer } from './reducer/song';
+import promiseMiddleware from 'redux-promise';
+// import createLogger from 'redux-logger';
 
-export const rootReducer = combineReducers({ user: userReducer, song: songReducer, songForm: songFormReducer });
+// const logger = createLogger('');
+
+const allReducer = {
+    user: userReducer,
+    song: songReducer,
+};
+export const rootReducer = combineReducers(allReducer);
+export const store = createStore(rootReducer, applyMiddleware(promiseMiddleware));
 export type RootState = ReturnType<typeof rootReducer>;
+export default store;

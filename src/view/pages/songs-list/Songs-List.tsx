@@ -1,14 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
 import { playSong, initHotSong } from '../../../service/songs';
-import { Table, Skeleton } from 'antd';
+import { Table, Skeleton, Button } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
-import { ISong } from '../../../redux/modules/songs';
 import { RootState } from '../../../redux';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getSongsList } from '../../../redux/modules/songs';
 import style from './songs-List.module.scss';
+import { ISong } from '../../../redux/reducer/song';
+import { setFormData } from '../../../redux/action/songs';
 
 const mapStateToProps = (state: RootState) => ({
     list: state.song,
@@ -16,7 +16,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getSongsList,
+            setFormData,
         },
         dispatch
     );
@@ -53,7 +53,7 @@ const SongsList: FC<IProps> = (props) => {
     const columns = songsColumn(play);
 
     const changeSize = (page: number) => {
-        props.getSongsList({ provider: 'netease',  page });
+        props.setFormData({ provider: 'netease', keyword: '',  page });
     };
 
     return (
@@ -66,7 +66,8 @@ const SongsList: FC<IProps> = (props) => {
                 />
             </Skeleton>
             <div className={style.player}>
-                <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted} />
+                <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted}
+                    children={<Button type="link">download</Button>}/>
             </div>
         </div>
     );

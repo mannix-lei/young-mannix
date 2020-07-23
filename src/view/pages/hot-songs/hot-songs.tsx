@@ -4,10 +4,11 @@ import React from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import { RootState } from '../../../redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import { getSongsList, ISong } from '../../../redux/modules/songs';
 import { initHotSong, playSong } from '../../../service/songs';
 import { songsColumn } from '../songs-list/columns';
 import { connect } from 'react-redux';
+import { setFormData } from '../../../redux/action/songs';
+import { ISong } from '../../../redux/reducer/song';
 
 const mapStateToProps = (state: RootState) => ({
     list: state.song,
@@ -15,7 +16,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getSongsList,
+            setFormData,
         },
         dispatch
     );
@@ -53,7 +54,7 @@ const HotSongs: FC<IProps> = (props) => {
     const columns = songsColumn(play);
 
     const changeSize = (page: number) => {
-        props.getSongsList({ provider: 'netease', page });
+        props.setFormData({ provider: 'netease', keyword: 'sia', page });
     };
     return (
         <div>

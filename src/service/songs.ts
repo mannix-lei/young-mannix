@@ -1,5 +1,5 @@
 import service from './index';
-import { ISong, ISongQuery } from '../redux/modules/songs';
+import { ISongQuery, ISong } from '../redux/reducer/song';
 
 /**
  * fetch song list

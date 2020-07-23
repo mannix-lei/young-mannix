@@ -3,7 +3,7 @@ import { Form, Input } from 'antd';
 import { connect } from 'react-redux';
 import { RootState } from '../../../redux';
 import { Dispatch, bindActionCreators } from 'redux';
-import { getSongsList } from '../../../redux/modules/songs';
+import { setFormData } from '../../../redux/action/songs';
 
 const layout = {
     labelCol: { span: 8 },
@@ -17,7 +17,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return bindActionCreators(
         {
-            getSongsList,
+            setFormData,
         },
         dispatch
     );
@@ -29,7 +29,7 @@ type IProps = ReturnType<typeof mapStateToProps> &
     };
 const SongsForm: FC<IProps> = (props) => {
     const search = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        props.getSongsList({ provider: 'netease', keyword: e.currentTarget.value, page: 1 });
+        props.setFormData({ provider: 'netease', keyword: e.currentTarget.value, page: 1 });
     };
     return (
         <Form

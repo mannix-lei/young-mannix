@@ -2,7 +2,7 @@ import React from 'react';
 import { Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
-import { ISong } from '../../../redux/modules/songs';
+import { ISong } from '../../../redux/reducer/song';
 
 export const songsColumn: (play: (platform: string, id: string) => void) => ColumnsType<ISong> = (play) => {
     return [
@@ -47,6 +47,7 @@ export const songsColumn: (play: (platform: string, id: string) => void) => Colu
             title: 'operation',
             dataIndex: 'operation',
             key: 'operation',
+            align: 'center',
             render: (text: string, record: ISong) => (
                 <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
                     <PlayCircleOutlined onClick={() => play(record.platform, record.originalId)} />
