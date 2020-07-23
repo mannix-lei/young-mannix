@@ -8,6 +8,7 @@ import { RootState } from '../../../redux';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { getSongsList } from '../../../redux/modules/songs';
+import style from './songs-List.module.scss';
 
 const mapStateToProps = (state: RootState) => ({
     list: state.song,
@@ -64,7 +65,9 @@ const SongsList: FC<IProps> = (props) => {
                     pagination={{ total, onChange: changeSize, showSizeChanger: false }}
                 />
             </Skeleton>
-            <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted} />
+            <div className={style.player}>
+                <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted} />
+            </div>
         </div>
     );
 };
