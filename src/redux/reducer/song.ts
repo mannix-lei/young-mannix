@@ -1,4 +1,4 @@
-import { getSongList } from '../action/songs';
+import { Reducer, Action } from "redux";
 
 export interface ISongForm {
     provider: string;
@@ -22,42 +22,52 @@ export interface IAlbum {
     link: string;
 }
 
-export interface ISongState {
+export interface ISongInitial {
     songsList: ISong[];
     total: number;
+    loading: boolean;
 }
 
-const initState: ISongState = {
+const initState: ISongInitial = {
     songsList: [],
     total: 0,
+    loading: true,
 };
 
 export interface ISongQuery {
-    provider?: string;
-    keyword?: string;
-    page?: number;
+    provider: string;
+    keyword: string;
+    page: number;
 }
 
-export const SET_SONG_FORM = 'songs/SET_SONG_FORM';
-export const GET_SONG_LIST = 'songs/GET_SONG_LIST';
+export enum SongActionType {
+    GetSongList,
+    GetHotSong
+}
 
-export type SongAction = ReturnType<typeof getSongList>;
+export interface ISongDispatchAction extends Action<SongActionType> {
+    payload: Partial<ISongInitial>;
+}
 
-export const songReducer = async (
+export const songReducer: Reducer<ISongInitial, ISongDispatchAction> = (
     state = initState,
-    action: SongAction
-): Promise<ISongForm> => {
-    console.log('================action====================');
-    console.log(action);
-    console.log('====================================');
-    switch ((await action).type) {
-        case SET_SONG_FORM:
-            console.log('========state============================');
-            console.log(state);
-            console.log('====================================');
-        case GET_SONG_LIST:
-            console.log(state);
+    action
+): ISongInitial => {
+    switch (action.type) {
+        case SongActionType.GetSongList:
+            return {
+                songsList: action.payload.songsList!,
+                total: action.payload.total!,
+                loading: action.payload.loading!,
+            };
+        case SongActionType.GetHotSong:
+            return {
+                ...state,
+                songsList: action.payload.songsList!,
+                total: action.payload.total!,
+                loading: action.payload.loading!,
+            };
         default:
-            return { keyword: '2342', provider: '325', page: 1 };
+            return state;
     }
 };

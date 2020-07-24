@@ -7,6 +7,7 @@ import SongsList from './view/pages/songs-list/songs-List';
 import Home from './view/home/Home';
 import SignUp from './view/sign-up/sign-up';
 import HotSongs from './view/pages/hot-songs/hot-songs';
+import TextFoo from './view/pages/test';
 
 const App = () => {
     const existingTokens = JSON.parse(localStorage.getItem('tokens')!);
@@ -26,6 +27,7 @@ const App = () => {
                 </Switch>
                 <PrivateRoute path="/list" Component={SongsList} />
                 <PrivateRoute path="/hot" Component={HotSongs} />
+                <PrivateRoute path="/test" Component={TextFoo} />
             </Router>
         </AuthContext.Provider>
     );

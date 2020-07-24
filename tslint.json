@@ -7,7 +7,7 @@
         "whitespace": false,
         "no-empty-interface": false,
         "label-position": false,
-        "quotemark": [true, "single", "jsx-double"],
+        "quotemark": false,
         "semicolon": true,
         "trailing-comma": false,
         "arrow-parens": false,
@@ -27,7 +27,12 @@
                 "typeAlias": false,
                 "typeParameter": false
             }
-        ]
+        ],
+        "indent": true,
+        "await-promise": true,
+        "class-name": true,
+        "no-duplicate-imports": true,
+        "no-null-keyword": true
     },
     "linterOptions": {
         "exclude": [

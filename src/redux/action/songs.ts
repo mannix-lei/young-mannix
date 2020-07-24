@@ -1,14 +1,40 @@
-import { typedAction } from '../helpers';
-import { initSongsList } from '../../service/songs';
-import { ISongForm, ISongState, GET_SONG_LIST } from '../reducer/song';
+import { Dispatch } from 'redux';
+import {
+    ISongForm,
+    SongActionType,
+    ISongDispatchAction,
+} from '../reducer/song';
+import { initHotSong, initSongsList } from '../../service/songs';
 
-export const setFormData = async (query: ISongForm) => {
-    await initSongsList(query).then(res => {
-        return typedAction(GET_SONG_LIST, { songsList: res.songs, total: res.totalCount });
-    });
-};
+export class SongDispatcher {
+    private readonly dispatch: Dispatch<ISongDispatchAction>;
 
-export const getSongList = async (data: ISongState) => {
-    return typedAction(GET_SONG_LIST, data);
-};
+    constructor(dispatch: Dispatch<ISongDispatchAction>) {
+        this.dispatch = dispatch;
+    }
 
+    getHotSong = async () => {
+        await initHotSong().then((res) => {
+            this.dispatch({
+                type: SongActionType.GetHotSong,
+                payload: {
+                    songsList: res.songs,
+                    total: res.totalCount || res.songs.length,
+                    loading: false,
+                },
+            });
+        });
+    };
+    getSongList = async (query: ISongForm) => {
+        await initSongsList(query).then((res) => {
+            this.dispatch({
+                type: SongActionType.GetSongList,
+                payload: {
+                    songsList: res.songs,
+                    total: res.totalCount || res.songs.length,
+                    loading: false,
+                },
+            });
+        });
+    };
+}

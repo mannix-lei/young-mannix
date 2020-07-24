@@ -31,7 +31,7 @@ export const songsColumn: (play: (platform: string, id: string) => void) => Colu
             title: 'album',
             dataIndex: 'album',
             key: 'album',
-            render: (text: string, record: ISong) => (
+            render: (_text: string, record: ISong) => (
                 <Tag key={record.album.name}>
                     <a href={record.album.link} target="_blank">{record.album.name}</a>
                 </Tag>
@@ -48,7 +48,7 @@ export const songsColumn: (play: (platform: string, id: string) => void) => Colu
             dataIndex: 'operation',
             key: 'operation',
             align: 'center',
-            render: (text: string, record: ISong) => (
+            render: (_text: string, record: ISong) => (
                 <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
                     <PlayCircleOutlined onClick={() => play(record.platform, record.originalId)} />
                     <DownloadOutlined />

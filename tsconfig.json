@@ -14,7 +14,10 @@
         "module": "esnext",
         "moduleResolution": "node",
         "noEmit": true,
-        "jsx": "react"
+        "jsx": "react",
+        "importHelpers": true,
+        "alwaysStrict": true,
+        "noUnusedParameters": true,
     },
     "include": [
         "src"

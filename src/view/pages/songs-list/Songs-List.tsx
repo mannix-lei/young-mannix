@@ -1,48 +1,32 @@
 import React, { FC, useState, useEffect } from 'react';
-import { playSong, initHotSong } from '../../../service/songs';
+import { playSong } from '../../../service/songs';
 import { Table, Skeleton, Button } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
-import { RootState } from '../../../redux';
-import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
 import style from './songs-List.module.scss';
 import { ISong } from '../../../redux/reducer/song';
-import { setFormData } from '../../../redux/action/songs';
+import { useSelector, useDispatch } from 'react-redux';
+import { SongDispatcher } from '../../../redux/action/songs';
+import { RootState } from '../../../redux';
 
-const mapStateToProps = (state: RootState) => ({
-    list: state.song,
-});
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            setFormData,
-        },
-        dispatch
-    );
-};
 
-type IProps = ReturnType<typeof mapStateToProps> &
-    ReturnType<typeof mapDispatchToProps>;
-const SongsList: FC<IProps> = (props) => {
-    const [list, setlist] = useState<ISong[]>([]);
-    const [total, settotal] = useState(0);
+type IProps = {};
+
+export interface ISongState {
+    songsList: ISong[];
+    total: number;
+    loading: boolean;
+}
+
+const SongsList: FC<IProps> = () => {
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState(false);
-    const [loading, setloading] = useState(false);
+    const dispatcher = useDispatch();
+    const rootDispatcher = new SongDispatcher(dispatcher);
 
-    const initList = async () => {
-        setloading(true);
-        await initHotSong().then(res => {
-            setlist(res.songs);
-            settotal(res.totalCount);
-            setloading(false);
-        }).catch(() => {
-            setloading(false);
-        })
-    };
+    const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
-        initList();
+        rootDispatcher.getSongList({ provider: 'netease', keyword: 'sia', page: 1 });
     }, []);
 
     const play = async (platform: string, id: string) => {
@@ -53,15 +37,14 @@ const SongsList: FC<IProps> = (props) => {
     const columns = songsColumn(play);
 
     const changeSize = (page: number) => {
-        props.setFormData({ provider: 'netease', keyword: '',  page });
+        rootDispatcher.getSongList({ provider: 'netease', keyword: 'sia', page });
     };
-
     return (
         <div>
             <Skeleton active loading={loading}>
                 <Table
                     columns={columns}
-                    dataSource={list}
+                    dataSource={songsList}
                     pagination={{ total, onChange: changeSize, showSizeChanger: false }}
                 />
             </Skeleton>
@@ -72,4 +55,4 @@ const SongsList: FC<IProps> = (props) => {
         </div>
     );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SongsList);
+export default SongsList;

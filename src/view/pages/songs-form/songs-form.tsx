@@ -1,35 +1,18 @@
 import React, { FC } from 'react';
 import { Form, Input } from 'antd';
 import { connect } from 'react-redux';
-import { RootState } from '../../../redux';
-import { Dispatch, bindActionCreators } from 'redux';
-import { setFormData } from '../../../redux/action/songs';
 
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
 };
 
-const mapStateToProps = (state: RootState) => ({
-    list: state.song,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-    return bindActionCreators(
-        {
-            setFormData,
-        },
-        dispatch
-    );
-};
-
-type IProps = ReturnType<typeof mapStateToProps> &
-    ReturnType<typeof mapDispatchToProps> & {
-        style: React.CSSProperties;
-    };
+interface IProps {
+    style: React.CSSProperties;
+}
 const SongsForm: FC<IProps> = (props) => {
-    const search = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        props.setFormData({ provider: 'netease', keyword: e.currentTarget.value, page: 1 });
+    const search = async (_e: React.KeyboardEvent<HTMLInputElement>) => {
+        // todo
     };
     return (
         <Form
@@ -49,4 +32,4 @@ const SongsForm: FC<IProps> = (props) => {
         </Form>
     );
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SongsForm);
+export default SongsForm;

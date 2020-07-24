@@ -1,16 +1,8 @@
-import { combineReducers, createStore, applyMiddleware } from 'redux';
-import { userReducer } from './reducer/user';
-import { songReducer } from './reducer/song';
+import { createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
-// import createLogger from 'redux-logger';
+import rootReducer from './reducer';
+import thunk from 'redux-thunk';
 
-// const logger = createLogger('');
-
-const allReducer = {
-    user: userReducer,
-    song: songReducer,
-};
-export const rootReducer = combineReducers(allReducer);
-export const store = createStore(rootReducer, applyMiddleware(promiseMiddleware));
+const store = createStore(rootReducer, applyMiddleware(thunk, promiseMiddleware));
 export type RootState = ReturnType<typeof rootReducer>;
 export default store;
