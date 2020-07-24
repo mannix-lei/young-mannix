@@ -23,9 +23,11 @@ const HotSongs: FC<IProps> = () => {
     const [meted, setmeted] = useState(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
+    const [width, setwidth] = useState(1080);
 
     const { songsList, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
+        getWidth();
         rootDispatcher.getHotSong();
     }, []);
 
@@ -33,7 +35,11 @@ const HotSongs: FC<IProps> = () => {
         const data = await playSong(platform, id);
         setcurrentSongUrl(data.songSource);
     };
-    const columns = songsColumn(play);
+    const getWidth = () => {
+        const width = document.querySelector('body')?.offsetWidth;
+        setwidth(width!);
+    };
+    const columns = songsColumn(width, play);
     return (
         <div>
             <Skeleton active loading={loading}>

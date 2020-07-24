@@ -28,12 +28,18 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const [provider, setprovider] = useState(params.get('provider') || 'netease');
     const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
     const [page, setpage] = useState(Number(params.get('page')) || 1);
+    const [width, setwidth] = useState(1080);
 
     const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
+        getWidth();
         init(provider, keyword, page);
     }, []);
 
+    const getWidth = () => {
+        const width = document.querySelector('body')?.offsetWidth;
+        setwidth(width!);
+    }
     const init = (p: string, k: string, page: number) => {
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
     }
@@ -45,7 +51,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
         })
     };
 
-    const columns = songsColumn(play);
+    const columns = songsColumn(width, play);
 
     const changeSize = (page: number) => {
         setpage(page);
