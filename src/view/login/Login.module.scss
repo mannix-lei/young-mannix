@@ -32,3 +32,40 @@
         }
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .body {
+        position: absolute !important;
+        z-index: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-height: 90vh;
+        background-color: #F1F2F5;
+    }
+    
+    .login {
+        margin: auto;
+        width: 20rem;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-top: 5rem;
+    
+        :global {
+            .ant-card {
+                border-radius: 6px;
+            }
+    
+            .ant-card-body {
+                padding: 30px;
+                margin-top: 20px;
+            }
+    
+            .ant-btn-primary {
+                width: 100%;
+            }
+        }
+    }
+}
