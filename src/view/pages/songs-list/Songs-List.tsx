@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { playSong } from '../../../service/songs';
-import { Table, Skeleton, Button } from 'antd';
+import { Table, Skeleton, Button, message } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
 import style from './songs-List.module.scss';
@@ -8,6 +8,7 @@ import { ISong } from '../../../redux/reducer/song';
 import { useSelector, useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
+import { RouteComponentProps } from 'react-router';
 
 
 type IProps = {};
@@ -18,26 +19,37 @@ export interface ISongState {
     loading: boolean;
 }
 
-const SongsList: FC<IProps> = () => {
+const SongsList: FC<IProps & RouteComponentProps> = (props) => {
+    const params = new URLSearchParams(props.location.search);
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
+    const [provider, setprovider] = useState(params.get('provider') || 'netease');
+    const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
+    const [page, setpage] = useState(Number(params.get('page')) || 1);
 
     const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
-        rootDispatcher.getSongList({ provider: 'netease', keyword: 'sia', page: 1 });
+        init(provider, keyword, page);
     }, []);
 
+    const init = (p: string, k: string, page: number) => {
+        rootDispatcher.getSongList({ provider: p, keyword: k, page });
+    }
     const play = async (platform: string, id: string) => {
-        const data = await playSong(platform, id);
-        setcurrentSongUrl(data.songSource);
+        await playSong(platform, id).then(res => {
+            setcurrentSongUrl(res.songSource);
+        }).catch(() => {
+            message.error('获取播放信息失败，请重试');
+        })
     };
 
     const columns = songsColumn(play);
 
     const changeSize = (page: number) => {
-        rootDispatcher.getSongList({ provider: 'netease', keyword: 'sia', page });
+        setpage(page);
+        init(provider, keyword, page);
     };
     return (
         <div>
