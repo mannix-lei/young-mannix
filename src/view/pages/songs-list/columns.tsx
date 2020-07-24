@@ -4,7 +4,6 @@ import { ColumnsType } from 'antd/es/table';
 import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ISong } from '../../../redux/reducer/song';
 import style from './songs-List.module.scss';
-import { Link } from 'react-router-dom';
 
 export const songsColumn: (width: number, play: (platform: string, id: string) => void) => ColumnsType<ISong> = (width, play) => {
     return width > 600 ? [
