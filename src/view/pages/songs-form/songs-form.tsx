@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { Form, Input } from 'antd';
-import { useHistory, RouteComponentProps } from 'react-router';
+import { Form, Input, message } from 'antd';
+import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
 
@@ -22,6 +22,10 @@ const SongsForm: FC<IProps> = (props) => {
     form.setFieldsValue({ keyword: params.get('keyword') });
 
     const search = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!e.currentTarget.value) {
+            message.info('please input something ~~');
+            return;
+        }
         history.replace(`/list?provider=netease&keyword=${e.currentTarget.value}&page=1`);
         rootDispatcher.getSongList({ provider: 'netease', keyword: e.currentTarget.value, page: 1 });
     };
