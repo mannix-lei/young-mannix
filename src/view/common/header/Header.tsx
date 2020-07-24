@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { Layout, Menu, Avatar } from 'antd';
+import { Layout, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import style from './Header.module.scss';
 import SongsForm from '../../pages/songs-form/songs-form';
@@ -20,29 +20,20 @@ const HeaderLayout: FC = (props: IProps) => {
             <Header>
                 <div className={style.search}>
                     <div className={style.avator} onClick={() => window.location.href='/' }></div>
-                    {/* <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[menuType.最新音乐]}>
-                    <Menu.Item key={menuType.最新音乐}>最新音乐</Menu.Item>
-                    <Menu.Item key={menuType.歌单}>歌单</Menu.Item>
-                </Menu> */}
                     <SongsForm
                         style={{
-                            width: '300px',
-                            marginLeft: '50px',
-                            marginTop: '15px',
+                            width: '18rem',
+                            marginLeft: '3rem',
+                            marginTop: '1rem',
                         }}
                     />
                 </div>
                 <Avatar
-                    style={{ backgroundColor: '#87d068', marginTop: '15px' }}
+                    className={style.loginAvatar}
                     icon={<UserOutlined />}
                 />
             </Header>
-            <Content style={{ padding: '24px 50px', background: '#fff', overflow: 'scroll' }}>
-                {/* <Breadcrumb style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    <Breadcrumb.Item>App</Breadcrumb.Item>
-                </Breadcrumb> */}
+            <Content className={style.content}>
                 <div className='site-layout-content'>{props.children}</div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>

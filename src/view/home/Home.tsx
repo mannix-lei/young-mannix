@@ -11,7 +11,7 @@ const Home: FC = () => {
         <div className={style.body}>
             <Card
                 hoverable
-                style={{ width: 240 }}
+                className={style.card}
                 cover={
                     <img
                         alt="hotImg"
@@ -26,7 +26,7 @@ const Home: FC = () => {
             </Card>
             <Card
                 hoverable
-                style={{ width: 240 }}
+                className={style.card}
                 cover={
                     <img
                         alt="listImg"
