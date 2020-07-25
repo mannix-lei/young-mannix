@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ISong } from '../../../redux/reducer/song';
-import style from './songs-List.module.scss';
+import style from './songs-list.module.scss';
 
 export const songsColumn: (width: number, play: (platform: string, id: string) => void) => ColumnsType<ISong> = (width, play) => {
     return width > 600 ? [

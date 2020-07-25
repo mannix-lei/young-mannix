@@ -2,15 +2,14 @@ import React, { FC, useState, useEffect } from 'react';
 import { playSong } from '../../../service/songs';
 import { Table, Skeleton, Button } from 'antd';
 import ReactAudioPlayer from 'react-audio-player';
-import style from '../songs-list/songs-List.module.scss';
+import style from '../songs-list/songs-list.module.scss';
 import { ISong } from '../../../redux/reducer/song';
 import { useSelector, useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
 import { songsColumn } from '../songs-list/columns';
 
-
-type IProps = {};
+interface IProps {}
 
 export interface ISongState {
     songsList: ISong[];
