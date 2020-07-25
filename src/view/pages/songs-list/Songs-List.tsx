@@ -10,8 +10,7 @@ import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
 import { RouteComponentProps } from 'react-router';
 
-
-type IProps = {};
+interface IProps {}
 
 export interface ISongState {
     songsList: ISong[];
@@ -39,16 +38,18 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const getWidth = () => {
         const width = document.querySelector('body')?.offsetWidth;
         setwidth(width!);
-    }
+    };
     const init = (p: string, k: string, page: number) => {
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
-    }
+    };
     const play = async (platform: string, id: string) => {
-        await playSong(platform, id).then(res => {
-            setcurrentSongUrl(res.songSource);
-        }).catch(() => {
-            message.error('获取播放信息失败，请重试');
-        })
+        await playSong(platform, id)
+            .then((res) => {
+                setcurrentSongUrl(res.songSource);
+            })
+            .catch(() => {
+                message.error('获取播放信息失败，请重试');
+            });
     };
 
     const columns = songsColumn(width, play);
@@ -67,8 +68,13 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
                 />
             </Skeleton>
             <div className={style.player}>
-                <ReactAudioPlayer src={currentSongUrl} autoPlay controls muted={meted}
-                    children={<Button type="link">download</Button>}/>
+                <ReactAudioPlayer
+                    src={currentSongUrl}
+                    autoPlay
+                    controls
+                    muted={meted}
+                    children={<Button type="link">download</Button>}
+                />
             </div>
         </div>
     );
