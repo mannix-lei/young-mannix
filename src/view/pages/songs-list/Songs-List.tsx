@@ -3,7 +3,7 @@ import { playSong } from '../../../service/songs';
 import { Table, Skeleton, Button, message } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
-import style from './songs-List.module.scss';
+import style from './songs-list.module.scss';
 import { ISong } from '../../../redux/reducer/song';
 import { useSelector, useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
