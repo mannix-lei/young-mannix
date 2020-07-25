@@ -22,9 +22,10 @@ const HeaderLayout: FC = (props: IProps) => {
                     <div className={style.avator} onClick={() => window.location.href='/' }></div>
                     <SongsForm
                         style={{
-                            width: '18rem',
-                            marginLeft: '3rem',
+                            width: '15rem',
+                            marginRight: '0.5rem',
                             marginTop: '1rem',
+                            marginLeft: '0.5rem',
                         }}
                     />
                 </div>
