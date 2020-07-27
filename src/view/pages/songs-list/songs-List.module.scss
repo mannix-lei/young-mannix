@@ -3,14 +3,24 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
+    background: #eee;
     height: 70px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0,0,0,.12);
 }
 
+.audio {
+    width: 50rem;
+    margin-top: 0.5rem;
+}
+
 @media only screen and (max-width: 600px) {
     .hide {
         display: none;
+    }
+
+    .audio {
+        width: 18rem;
+        margin-top: 0.5rem;
     }
 }

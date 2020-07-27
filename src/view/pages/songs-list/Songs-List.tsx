@@ -1,6 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, SyntheticEvent } from 'react';
 import { playSong } from '../../../service/songs';
-import { Table, Skeleton, Button, message } from 'antd';
+import { Table, Skeleton, message, Button } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
 import style from './songs-list.module.scss';
@@ -27,7 +27,10 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const [provider, setprovider] = useState(params.get('provider') || 'netease');
     const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
     const [page, setpage] = useState(Number(params.get('page')) || 1);
+    const [currentId, setcurrentId] = useState('');
     const [width, setwidth] = useState(1080);
+    const [currentList, setcurrentList] = useState<ISong[]>([]);
+    const audioRef = React.createRef<ReactAudioPlayer>();
 
     const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
@@ -58,9 +61,22 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
         setpage(page);
         init(provider, keyword, page);
     };
+    // const playAll = async () => {
+    //     setcurrentList(songsList);
+    //     currentList
+    // };
+    const playCurrent = (e: SyntheticEvent<HTMLAudioElement, Event>) => {
+        console.log('====================================');
+        console.log(e);
+        console.log('====================================');
+    };
+    // if (!loading) {
+    //     play(provider, songsList[0].originalId);
+    // }
     return (
         <div>
             <Skeleton active loading={loading}>
+                {/* <Button type="link" onClick={() => playAll()}>播放全部</Button> */}
                 <Table
                     columns={columns}
                     dataSource={songsList}
@@ -69,11 +85,13 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
             </Skeleton>
             <div className={style.player}>
                 <ReactAudioPlayer
+                    ref={audioRef}
+                    className={style.audio}
                     src={currentSongUrl}
-                    autoPlay
+                    autoPlay={false}
                     controls
+                    onPlay={(e) => playCurrent(e)}
                     muted={meted}
-                    children={<Button type="link">download</Button>}
                 />
             </div>
         </div>
