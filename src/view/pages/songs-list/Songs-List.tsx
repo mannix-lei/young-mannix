@@ -27,10 +27,11 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const [provider, setprovider] = useState(params.get('provider') || 'netease');
     const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
     const [page, setpage] = useState(Number(params.get('page')) || 1);
-    const [currentId, setcurrentId] = useState('');
+    const [currentIndex, setcurrentIndex] = useState(0);
     const [width, setwidth] = useState(1080);
     const [currentList, setcurrentList] = useState<ISong[]>([]);
     const audioRef = React.createRef<ReactAudioPlayer>();
+    const [autoPlay, setautoPlay] = useState(false);
 
     const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
@@ -46,6 +47,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
     };
     const play = async (platform: string, id: string) => {
+        setautoPlay(true);
         await playSong(platform, id)
             .then((res) => {
                 setcurrentSongUrl(res.songSource);
@@ -55,28 +57,43 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
             });
     };
 
-    const columns = songsColumn(width, play);
+    const download = async (platform: string, id: string, name: string) => {
+        await playSong(platform, id)
+            .then((res) => {
+                const a = document.createElement('a');
+                a.setAttribute('href', res.songSource);
+                a.setAttribute('target', '_blank');
+                a.setAttribute('download', name);
+                a.click();
+            })
+            .catch(() => {
+                message.error('获取播放信息失败，请重试');
+            });
+    };
+
+    const columns = songsColumn(width, play, download);
 
     const changeSize = (page: number) => {
         setpage(page);
         init(provider, keyword, page);
     };
-    // const playAll = async () => {
-    //     setcurrentList(songsList);
-    //     currentList
-    // };
-    const playCurrent = (e: SyntheticEvent<HTMLAudioElement, Event>) => {
-        console.log('====================================');
-        console.log(e);
-        console.log('====================================');
+    const playAll = async () => {
+        setautoPlay(true);
+        setcurrentList(songsList);
+        play(provider, songsList[currentIndex].originalId);
     };
-    // if (!loading) {
-    //     play(provider, songsList[0].originalId);
-    // }
+    const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
+        if (currentIndex < songsList.length - 1) {
+            setcurrentIndex(currentIndex + 1);
+            play(provider, songsList[currentIndex + 1].originalId);
+        } else {
+            setautoPlay(false);
+        }
+    };
     return (
         <div>
             <Skeleton active loading={loading}>
-                {/* <Button type="link" onClick={() => playAll()}>播放全部</Button> */}
+                <Button type="link" onClick={() => playAll()}>播放全部</Button>
                 <Table
                     columns={columns}
                     dataSource={songsList}
@@ -88,9 +105,9 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
                     ref={audioRef}
                     className={style.audio}
                     src={currentSongUrl}
-                    autoPlay={false}
+                    autoPlay={autoPlay}
                     controls
-                    onPlay={(e) => playCurrent(e)}
+                    onEnded={(e) => handleEnd(e)}
                     muted={meted}
                 />
             </div>

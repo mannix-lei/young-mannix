@@ -5,9 +5,10 @@ import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ISong } from '../../../redux/reducer/song';
 import style from './songs-list.module.scss';
 
-export const songsColumn: (width: number, play: (platform: string, id: string) => void) => ColumnsType<ISong> = (
+export const songsColumn: (width: number, play: (platform: string, id: string) => void, download: (platform: string, id: string, name: string) => void) => ColumnsType<ISong> = (
     width,
-    play
+    play,
+    download
 ) => {
     return width > 600
         ? [
@@ -68,7 +69,7 @@ export const songsColumn: (width: number, play: (platform: string, id: string) =
                   render: (_text: string, record: ISong) => (
                       <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
                           <PlayCircleOutlined onClick={() => play(record.platform, record.originalId)} />
-                          <DownloadOutlined />
+                          <DownloadOutlined onClick={() => download(record.platform, record.originalId, record.name)} />
                       </div>
                   ),
               },
@@ -106,7 +107,7 @@ export const songsColumn: (width: number, play: (platform: string, id: string) =
                   render: (_text: string, record: ISong) => (
                       <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
                           <PlayCircleOutlined onClick={() => play(record.platform, record.originalId)} />
-                          <DownloadOutlined />
+                          <DownloadOutlined onClick={() => download(record.platform, record.originalId, record.name)} />
                       </div>
                   ),
               },
