@@ -44,11 +44,18 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
     const download = async (platform: string, id: string, name: string) => {
         await playSong(platform, id)
             .then((res) => {
-                const a = document.createElement('a');
-                a.setAttribute('href', res.songSource);
-                a.setAttribute('target', '_blank');
-                a.setAttribute('download', name);
-                a.click();
+                if (navigator.platform.match(/Win|Linux|MAC/i)) {
+                    const a = document.createElement('a');
+                    a.setAttribute('href', res.songSource);
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('download', name);
+                    a.click();
+                } else {
+                    const myFrame= document.createElement('iframe');
+                    myFrame.src = res.songSource;
+                    myFrame.style.display = name;
+                    document.body.appendChild(myFrame);
+                }
             })
             .catch(() => {
                 message.error('获取播放信息失败，请重试');
