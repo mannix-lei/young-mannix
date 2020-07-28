@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, SyntheticEvent } from 'react';
 import { playSong } from '../../../service/songs';
 import { Table, Skeleton, Button, message } from 'antd';
 import ReactAudioPlayer from 'react-audio-player';
@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
 import { songsColumn } from '../songs-list/columns';
+import { RouteComponentProps } from 'react-router';
 
 interface IProps {}
 
@@ -17,12 +18,18 @@ export interface ISongState {
     loading: boolean;
 }
 
-const HotSongs: FC<IProps> = () => {
+const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
     const [width, setwidth] = useState(1080);
+    const [autoPlay, setautoPlay] = useState(false);
+    const params = new URLSearchParams(props.location.search);
+    const [provider, setprovider] = useState(params.get('provider') || 'netease');
+    const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
+    const [page, setpage] = useState(Number(params.get('page')) || 1);
+    const [currentIndex, setcurrentIndex] = useState(0);
 
     const { songsList, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
@@ -51,17 +58,32 @@ const HotSongs: FC<IProps> = () => {
         const width = document.querySelector('body')?.offsetWidth;
         setwidth(width!);
     };
+    const playAll = async () => {
+        setautoPlay(true);
+        play(provider, songsList[currentIndex].originalId);
+    };
+    const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
+        if (currentIndex < songsList.length - 1) {
+            setcurrentIndex(currentIndex + 1);
+            play(provider, songsList[currentIndex + 1].originalId);
+        } else {
+            setautoPlay(false);
+        }
+    };
     const columns = songsColumn(width, play, download);
     return (
         <div>
             <Skeleton active loading={loading}>
+                <Button type="link" onClick={() => playAll()}>播放全部</Button>
                 <Table columns={columns} dataSource={songsList} pagination={false} />
             </Skeleton>
             <div className={style.player}>
                 <ReactAudioPlayer
                     src={currentSongUrl}
-                    autoPlay
+                    autoPlay={autoPlay}
+                    className={style.audio}
                     controls
+                    onEnded={(e) => handleEnd(e)}
                     muted={meted}
                     children={<Button type="link">download</Button>}
                 />

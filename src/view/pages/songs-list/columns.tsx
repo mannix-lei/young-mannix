@@ -55,11 +55,10 @@ export const songsColumn: (width: number, play: (platform: string, id: string) =
                   ),
               },
               {
-                  title: 'copyright',
-                  dataIndex: 'copyright',
-                  key: 'copyright',
+                  title: 'platform',
+                  dataIndex: 'platform',
+                  key: 'platform',
                   className: `${style.hide}`,
-                  render: (text: boolean) => (text ? 'yes' : 'no'),
               },
               {
                   title: 'operation',

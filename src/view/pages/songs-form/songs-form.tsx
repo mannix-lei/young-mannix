@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
-import { Form, Input, message } from 'antd';
+import React, { FC, useState } from 'react';
+import { Form, Input, message, Select } from 'antd';
 import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
+import style from './songs-form.module.scss';
 
 const layout = {
     labelCol: { span: 8 },
@@ -10,7 +11,7 @@ const layout = {
 };
 
 interface IProps {
-    style: React.CSSProperties;
+    style?: React.CSSProperties;
 }
 const SongsForm: FC<IProps> = (props) => {
     const history = useHistory();
@@ -19,6 +20,8 @@ const SongsForm: FC<IProps> = (props) => {
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
     const [form] = Form.useForm();
+    const [provider, setprovider] = useState(params.get('provider') || 'netease');
+    const [keyword, setkeyword] = useState(params.get('keyword'));
     form.setFieldsValue({ keyword: params.get('keyword') });
 
     const search = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -26,11 +29,23 @@ const SongsForm: FC<IProps> = (props) => {
             message.info('please input something ~~');
             return;
         }
-        history.replace(`/list?provider=netease&keyword=${e.currentTarget.value}&page=1`);
-        rootDispatcher.getSongList({ provider: 'netease', keyword: e.currentTarget.value, page: 1 });
+        history.replace(`/list?provider=${provider}&keyword=${e.currentTarget.value}&page=1`);
+        rootDispatcher.getSongList({ provider, keyword: e.currentTarget.value, page: 1 });
     };
+    const handleSelectProvider = (value: string) => {
+        setprovider(value);
+    };
+    const selectAfter = (
+        <Select defaultValue={provider || 'netease'} className="select-after" onChange={(value) => handleSelectProvider(value)}>
+          <Select.Option value="netease">网易云</Select.Option>
+          <Select.Option value="qq">QQ</Select.Option>
+          <Select.Option value="xiami">虾米</Select.Option>
+          <Select.Option value="kuwo">酷我</Select.Option>
+        </Select>
+      );
     return (
         <Form
+            className={style.formBody}
             style={props.style}
             {...layout}
             name="basic"
@@ -39,6 +54,7 @@ const SongsForm: FC<IProps> = (props) => {
         >
             <Form.Item label="" name="keyword">
                 <Input
+                    addonAfter={selectAfter}
                     placeholder="please input something~"
                     onPressEnter={(
                         event: React.KeyboardEvent<HTMLInputElement>

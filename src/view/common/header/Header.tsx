@@ -20,14 +20,7 @@ const HeaderLayout: FC = (props: IProps) => {
             <Header>
                 <div className={style.search}>
                     <div className={style.avator} onClick={() => window.location.href='/' }></div>
-                    <SongsForm
-                        style={{
-                            width: '15rem',
-                            marginRight: '0.5rem',
-                            marginTop: '1rem',
-                            marginLeft: '0.5rem',
-                        }}
-                    />
+                    <SongsForm/>
                 </div>
                 <Avatar
                     className={style.loginAvatar}

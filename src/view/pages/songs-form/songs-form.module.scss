@@ -1,0 +1,15 @@
+.formBody {
+    width: 35rem;
+    margin-right: 0.5rem;
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+}
+
+@media only screen and (max-width: 600px) {
+    .formBody {
+        width: 15rem;
+        margin-right: 0.5rem;
+        margin-top: 1rem;
+        margin-left: 0.5rem;
+    }
+}
