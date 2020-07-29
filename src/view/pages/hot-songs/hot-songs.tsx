@@ -67,6 +67,7 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
         setwidth(width!);
     };
     const playAll = async () => {
+        setprovider(params.get('provider') || 'netease');
         setautoPlay(true);
         play(provider, songsList[currentIndex].originalId);
     };
