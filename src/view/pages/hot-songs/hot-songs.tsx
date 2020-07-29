@@ -31,6 +31,7 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
     const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
     const [page, setpage] = useState(Number(params.get('page')) || 1);
     const [currentIndex, setcurrentIndex] = useState(0);
+    const [name, setname] = useState('');
 
     const { songsList, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
@@ -38,7 +39,8 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
         rootDispatcher.getHotSong('netease');
     }, []);
 
-    const play = async (platform: string, id: string) => {
+    const play = async (platform: string, id: string, name: string) => {
+        setname(name);
         const data = await playSong(platform, id);
         setcurrentSongUrl(data.songSource);
     };
@@ -69,14 +71,15 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
     const playAll = async () => {
         setprovider(params.get('provider') || 'netease');
         setautoPlay(true);
-        play(provider, songsList[currentIndex].originalId);
+        play(provider, songsList[currentIndex].originalId, songsList[currentIndex].name);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < songsList.length - 1) {
             setcurrentIndex(currentIndex + 1);
-            play(provider, songsList[currentIndex + 1].originalId);
+            play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex].name);
         } else {
             setautoPlay(false);
+            setname('');
             setcurrentIndex(0);
         }
     };
@@ -88,6 +91,7 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
                 <Table columns={columns} dataSource={songsList} pagination={false} />
             </Skeleton>
             <div className={style.player}>
+                {name && <div className={style.currentSong}>当前播放：{name}</div>}
                 <ReactAudioPlayer
                     src={currentSongUrl}
                     autoPlay={autoPlay}
