@@ -98,6 +98,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
             play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex + 1].name);
         } else {
             setname('');
+            setcurrentIndex(0);
             setautoPlay(false);
         }
     };

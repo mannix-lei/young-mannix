@@ -9,6 +9,7 @@ import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
 import { songsColumn } from '../songs-list/columns';
 import { RouteComponentProps } from 'react-router';
+import { PlayCircleOutlined } from '@ant-design/icons';
 
 interface IProps {}
 
@@ -34,7 +35,7 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
     const { songsList, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
         getWidth();
-        rootDispatcher.getHotSong();
+        rootDispatcher.getHotSong('netease');
     }, []);
 
     const play = async (platform: string, id: string) => {
@@ -75,13 +76,14 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
             play(provider, songsList[currentIndex + 1].originalId);
         } else {
             setautoPlay(false);
+            setcurrentIndex(0);
         }
     };
     const columns = songsColumn(width, play, download);
     return (
         <div>
             <Skeleton active loading={loading}>
-                <Button type="link" onClick={() => playAll()}>播放全部</Button>
+            <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
                 <Table columns={columns} dataSource={songsList} pagination={false} />
             </Skeleton>
             <div className={style.player}>

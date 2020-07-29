@@ -13,8 +13,8 @@ export class SongDispatcher {
         this.dispatch = dispatch;
     }
 
-    getHotSong = async () => {
-        await initHotSong().then((res) => {
+    public getHotSong = async (p: string) => {
+        await initHotSong(p).then((res) => {
             this.dispatch({
                 type: SongActionType.GetHotSong,
                 payload: {
@@ -25,7 +25,7 @@ export class SongDispatcher {
             });
         });
     };
-    getSongList = async (query: ISongForm) => {
+    public getSongList = async (query: ISongForm) => {
         await initSongsList(query).then((res) => {
             this.dispatch({
                 type: SongActionType.GetSongList,

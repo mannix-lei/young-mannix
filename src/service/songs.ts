@@ -26,6 +26,6 @@ export const playSong = async (platform: string, id: string): Promise<{ songSour
 /**
  * load hot songs
  */
-export const initHotSong = async (): Promise<{ songs: ISong[]; totalCount: number }> => {
-    return await service.get('/hot_list/netease');
+export const initHotSong = async (provider: string): Promise<{ songs: ISong[]; totalCount: number }> => {
+    return await service.get(`/hot_list/${provider}`);
 };
