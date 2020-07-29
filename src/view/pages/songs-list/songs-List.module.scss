@@ -7,12 +7,23 @@
     height: 70px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0,0,0,.12);
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .audio {
     width: 50rem;
     margin-top: 0.5rem;
     border-radius: 5px;
+}
+
+.currentSong {
+    line-height: 5;
+}
+
+.playAll {
+    font-size: 1.2rem;
+    margin: 1rem 0;
 }
 
 @media only screen and (max-width: 600px) {

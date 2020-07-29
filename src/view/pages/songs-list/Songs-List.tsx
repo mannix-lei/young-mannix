@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SongDispatcher } from '../../../redux/action/songs';
 import { RootState } from '../../../redux';
 import { RouteComponentProps } from 'react-router';
+import { PlayCircleOutlined } from '@ant-design/icons';
 
 interface IProps {}
 
@@ -30,6 +31,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const [currentIndex, setcurrentIndex] = useState(0);
     const [width, setwidth] = useState(1080);
     const [currentList, setcurrentList] = useState<ISong[]>([]);
+    const [name, setname] = useState('');
     const audioRef = React.createRef<ReactAudioPlayer>();
     const [autoPlay, setautoPlay] = useState(false);
 
@@ -46,8 +48,9 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const init = (p: string, k: string, page: number) => {
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
     };
-    const play = async (platform: string, id: string) => {
+    const play = async (platform: string, id: string, name: string) => {
         setautoPlay(true);
+        setname(name);
         await playSong(platform, id)
             .then((res) => {
                 setcurrentSongUrl(res.songSource);
@@ -87,20 +90,21 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const playAll = async () => {
         setautoPlay(true);
         setcurrentList(songsList);
-        play(provider, songsList[currentIndex].originalId);
+        play(provider, songsList[currentIndex].originalId, songsList[currentIndex].name);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < songsList.length - 1) {
             setcurrentIndex(currentIndex + 1);
-            play(provider, songsList[currentIndex + 1].originalId);
+            play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex + 1].name);
         } else {
+            setname('');
             setautoPlay(false);
         }
     };
     return (
         <div>
             <Skeleton active loading={loading}>
-                <Button type="link" onClick={() => playAll()}>播放全部</Button>
+                <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
                 <Table
                     columns={columns}
                     dataSource={songsList}
@@ -108,6 +112,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
                 />
             </Skeleton>
             <div className={style.player}>
+                {name && <div className={style.currentSong}>当前播放：{name}</div>}
                 <ReactAudioPlayer
                     ref={audioRef}
                     className={style.audio}
