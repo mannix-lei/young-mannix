@@ -2,7 +2,7 @@ import Axios from 'axios';
 import { notification } from 'antd';
 
 const instance = Axios.create({
-    baseURL: '/api',
+    baseURL: '',
     withCredentials: false,
 });
 
@@ -17,6 +17,9 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
+        if (response.config.url === '/cityapi/cityjson') {
+            return JSON.parse(response.data.match(/{[^}{]*?}/g)[0]);
+        }
         if (response.status === 200) {
             return response.data.data;
         } else {

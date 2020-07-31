@@ -1,15 +1,15 @@
 import React, { FC, useState, useEffect, SyntheticEvent } from 'react';
-import { playSong } from '../../../service/songs';
-import { Table, Skeleton, Button, message } from 'antd';
+import { Table, Skeleton, message, Button } from 'antd';
+import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
-import style from '../songs-list/songs-list.module.scss';
-import { ISong } from '../../../redux/reducer/song';
+import style from './songs-list.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { SongDispatcher } from '../../../redux/action/songs';
-import { RootState } from '../../../redux';
-import { songsColumn } from '../songs-list/columns';
 import { RouteComponentProps } from 'react-router';
 import { PlayCircleOutlined } from '@ant-design/icons';
+import { ISong } from '../../../../redux/reducer/song';
+import { SongDispatcher } from '../../../../redux/action/songs';
+import { RootState } from '../../../../redux';
+import { playSong } from '../../../../service/songs';
 
 interface IProps {}
 
@@ -19,31 +19,47 @@ export interface ISongState {
     loading: boolean;
 }
 
-const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
+const SongsList: FC<IProps & RouteComponentProps> = (props) => {
+    const params = new URLSearchParams(props.location.search);
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
-    const [width, setwidth] = useState(1080);
-    const [autoPlay, setautoPlay] = useState(false);
-    const params = new URLSearchParams(props.location.search);
     const [provider, setprovider] = useState(params.get('provider') || 'netease');
     const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
     const [page, setpage] = useState(Number(params.get('page')) || 1);
     const [currentIndex, setcurrentIndex] = useState(0);
+    const [width, setwidth] = useState(1080);
+    const [currentList, setcurrentList] = useState<ISong[]>([]);
     const [name, setname] = useState('');
+    const audioRef = React.createRef<ReactAudioPlayer>();
+    const [autoPlay, setautoPlay] = useState(false);
 
-    const { songsList, loading } = useSelector((state: RootState) => state.song);
+    const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
         getWidth();
-        rootDispatcher.getHotSong('netease');
+        init(provider, keyword, page);
     }, []);
 
-    const play = async (platform: string, id: string, name: string) => {
-        setname(name);
-        const data = await playSong(platform, id);
-        setcurrentSongUrl(data.songSource);
+    const getWidth = () => {
+        const width = document.querySelector('body')?.offsetWidth;
+        setwidth(width!);
     };
+    const init = (p: string, k: string, page: number) => {
+        rootDispatcher.getSongList({ provider: p, keyword: k, page });
+    };
+    const play = async (platform: string, id: string, name: string) => {
+        setautoPlay(true);
+        setname(name);
+        await playSong(platform, id)
+            .then((res) => {
+                setcurrentSongUrl(res.songSource);
+            })
+            .catch(() => {
+                message.error('获取播放信息失败，请重试');
+            });
+    };
+
     const download = async (platform: string, id: string, name: string) => {
         await playSong(platform, id)
             .then((res) => {
@@ -64,45 +80,51 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
                 message.error('获取播放信息失败，请重试');
             });
     };
-    const getWidth = () => {
-        const width = document.querySelector('body')?.offsetWidth;
-        setwidth(width!);
+
+    const columns = songsColumn(width, play, download);
+
+    const changeSize = (page: number) => {
+        setpage(page);
+        init(provider, keyword, page);
     };
     const playAll = async () => {
-        setprovider(params.get('provider') || 'netease');
         setautoPlay(true);
+        setcurrentList(songsList);
         play(provider, songsList[currentIndex].originalId, songsList[currentIndex].name);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < songsList.length - 1) {
             setcurrentIndex(currentIndex + 1);
-            play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex].name);
+            play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex + 1].name);
         } else {
-            setautoPlay(false);
             setname('');
             setcurrentIndex(0);
+            setautoPlay(false);
         }
     };
-    const columns = songsColumn(width, play, download);
     return (
         <div>
             <Skeleton active loading={loading}>
-            <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
-                <Table columns={columns} dataSource={songsList} pagination={false} />
+                <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
+                <Table
+                    columns={columns}
+                    dataSource={songsList}
+                    pagination={{ total, onChange: changeSize, showSizeChanger: false }}
+                />
             </Skeleton>
             <div className={style.player}>
                 {name && <div className={style.currentSong}>当前播放：{name}</div>}
                 <ReactAudioPlayer
+                    ref={audioRef}
+                    className={style.audio}
                     src={currentSongUrl}
                     autoPlay={autoPlay}
-                    className={style.audio}
                     controls
                     onEnded={(e) => handleEnd(e)}
                     muted={meted}
-                    children={<Button type="link">download</Button>}
                 />
             </div>
         </div>
     );
 };
-export default HotSongs;
+export default SongsList;

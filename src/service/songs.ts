@@ -7,7 +7,7 @@ import { ISongQuery, ISong } from '../redux/reducer/song';
  * @param keyword
  */
 export const initSongsList = async (query: ISongQuery): Promise<{ songs: ISong[]; totalCount: number }> => {
-    return await service.get('/search', {
+    return await service.get('/api/search', {
         params: {
             ...query,
         },
@@ -20,12 +20,12 @@ export const initSongsList = async (query: ISongQuery): Promise<{ songs: ISong[]
  * @param id
  */
 export const playSong = async (platform: string, id: string): Promise<{ songSource: string }> => {
-    return await service.get(`/song_source/${platform}/${id}`);
+    return await service.get(`/api/song_source/${platform}/${id}`);
 };
 
 /**
  * load hot songs
  */
 export const initHotSong = async (provider: string): Promise<{ songs: ISong[]; totalCount: number }> => {
-    return await service.get(`/hot_list/${provider}`);
+    return await service.get(`/api/hot_list/${provider}`);
 };

@@ -2,8 +2,8 @@ import React from 'react';
 import { Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
-import { ISong } from '../../../redux/reducer/song';
 import style from './songs-list.module.scss';
+import { ISong } from '../../../../redux/reducer/song';
 
 export const songsColumn: (width: number, play: (platform: string, id: string, name: string) => void, download: (platform: string, id: string, name: string) => void) => ColumnsType<ISong> = (
     width,
