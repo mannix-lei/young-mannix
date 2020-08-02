@@ -12,18 +12,25 @@
 }
 
 .audio {
-    width: 50rem;
+    width: 45rem;
     margin-top: 0.5rem;
     border-radius: 5px;
 }
 
 .currentSong {
+    color: #808080;
     line-height: 5;
 }
 
 .playAll {
     font-size: 1.2rem;
     margin: 1rem 0;
+}
+
+.songName {
+    color: #000;
+    margin-right: 8px;
+    font-size: 16px;
 }
 
 @media only screen and (max-width: 600px) {

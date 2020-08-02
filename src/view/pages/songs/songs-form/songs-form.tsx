@@ -37,11 +37,11 @@ const SongsForm: FC<IProps> = (props) => {
             message.info('please input something ~~');
             return;
         }
-        if (history.location.pathname === '/hot') {
+        if (history.location.pathname === '/songs/hot') {
             rootDispatcher.getHotSong(val);
-            history.replace(`/hot?provider=${val}`);
+            history.replace(`/songs/hot?provider=${val}`);
         } else {
-            history.replace(`/list?provider=${provider}&keyword=${val}&page=1`);
+            history.replace(`/songs/list?provider=${provider}&keyword=${val}&page=1`);
             rootDispatcher.getSongList({ provider, keyword: val, page: 1 });
         }
     };
@@ -65,7 +65,7 @@ const SongsForm: FC<IProps> = (props) => {
             form={form}
             initialValues={{ remember: true }}
         >
-            {history.location.pathname !== '/hot' && <Form.Item label="" name="keyword">
+           <Form.Item label="" name="keyword">
                 <Input
                     maxLength={30}
                     addonAfter={selectAfter}
@@ -74,8 +74,8 @@ const SongsForm: FC<IProps> = (props) => {
                         event: React.KeyboardEvent<HTMLInputElement>
                     ) => search(event.currentTarget.value)}
                 />
-            </Form.Item>}
-            {history.location.pathname === '/hot' && <Form.Item label="" name="provider">
+            </Form.Item>
+           <Form.Item label="" name="provider">
                 <Radio.Group buttonStyle="solid" value={provider} onChange={(e) => {
                         form.setFieldsValue({ provider: e.target.value });
                         setprovider(e.target.value);
@@ -85,7 +85,7 @@ const SongsForm: FC<IProps> = (props) => {
                     <Radio.Button value={ProviderType.虾米} disabled>虾米</Radio.Button>
                     <Radio.Button value={ProviderType.酷我} disabled>酷我</Radio.Button>
                 </Radio.Group>
-            </Form.Item>}
+            </Form.Item>
         </Form>
     );
 };

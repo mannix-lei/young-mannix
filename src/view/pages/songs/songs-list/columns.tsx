@@ -5,7 +5,7 @@ import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
 import style from './songs-list.module.scss';
 import { ISong } from '../../../../redux/reducer/song';
 
-export const songsColumn: (width: number, play: (platform: string, id: string, name: string) => void, download: (platform: string, id: string, name: string) => void) => ColumnsType<ISong> = (
+export const songsColumn: (width: number, play: (item: ISong) => void, download: (platform: string, id: string, name: string) => void) => ColumnsType<ISong> = (
     width,
     play,
     download
@@ -28,7 +28,7 @@ export const songsColumn: (width: number, play: (platform: string, id: string, n
                   dataIndex: 'artists',
                   key: 'artists',
                   className: `${style.hide}`,
-                  render: (_text: string, record: ISong) => {
+                  render: (_TEXT: string, record: ISong) => {
                       return record.artists.map((item) => {
                           const color = record.artists.length > 5 ? 'geekblue' : 'green';
                           return (
@@ -46,7 +46,7 @@ export const songsColumn: (width: number, play: (platform: string, id: string, n
                   dataIndex: 'album',
                   key: 'album',
                   className: `${style.hide}`,
-                  render: (_text: string, record: ISong) => (
+                  render: (_TEXT: string, record: ISong) => (
                       <Tag key={record.album.name}>
                           <a href={record.album.link} target="_blank">
                               {record.album.name}
@@ -65,9 +65,9 @@ export const songsColumn: (width: number, play: (platform: string, id: string, n
                   dataIndex: 'operation',
                   key: 'operation',
                   align: 'center',
-                  render: (_text: string, record: ISong) => (
+                  render: (_TEXT: string, record: ISong) => (
                       <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
-                          <PlayCircleOutlined onClick={() => play(record.platform, record.originalId, record.name)} />
+                          <PlayCircleOutlined onClick={() => play(record)} />
                           <DownloadOutlined onClick={() => download(record.platform, record.originalId, record.name)} />
                       </div>
                   ),
@@ -103,9 +103,9 @@ export const songsColumn: (width: number, play: (platform: string, id: string, n
                   dataIndex: 'operation',
                   key: 'operation',
                   align: 'center',
-                  render: (_text: string, record: ISong) => (
+                  render: (_TEXT: string, record: ISong) => (
                       <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '20px' }}>
-                          <PlayCircleOutlined onClick={() => play(record.platform, record.originalId, record.name)} />
+                          <PlayCircleOutlined onClick={() => play(record)} />
                           <DownloadOutlined onClick={() => download(record.platform, record.originalId, record.name)} />
                       </div>
                   ),

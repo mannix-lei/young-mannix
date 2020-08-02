@@ -48,10 +48,10 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const init = (p: string, k: string, page: number) => {
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
     };
-    const play = async (platform: string, id: string, name: string) => {
+    const play = async (record: ISong) => {
         setautoPlay(true);
-        setname(name);
-        await playSong(platform, id)
+        setname(record.name);
+        await playSong(record.platform, record.originalId)
             .then((res) => {
                 setcurrentSongUrl(res.songSource);
             })
@@ -90,12 +90,12 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     const playAll = async () => {
         setautoPlay(true);
         setcurrentList(songsList);
-        play(provider, songsList[currentIndex].originalId, songsList[currentIndex].name);
+        play(songsList[currentIndex]);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < songsList.length - 1) {
             setcurrentIndex(currentIndex + 1);
-            play(provider, songsList[currentIndex + 1].originalId, songsList[currentIndex + 1].name);
+            play(songsList[currentIndex + 1]);
         } else {
             setname('');
             setcurrentIndex(0);
