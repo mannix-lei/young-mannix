@@ -4,12 +4,13 @@ import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
 import style from './songs-list.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, useHistory } from 'react-router';
 import { PlayCircleOutlined } from '@ant-design/icons';
-import { ISong } from '../../../../redux/reducer/song';
+import { ISong, ISongForm, IAlbum } from '../../../../redux/reducer/song';
 import { SongDispatcher } from '../../../../redux/action/songs';
 import { RootState } from '../../../../redux';
 import { playSong } from '../../../../service/songs';
+import SongsForm, { ProviderType } from '../songs-form/songs-form';
 
 interface IProps {}
 
@@ -19,26 +20,27 @@ export interface ISongState {
     loading: boolean;
 }
 
-const SongsList: FC<IProps & RouteComponentProps> = (props) => {
-    const params = new URLSearchParams(props.location.search);
+const SongsList: FC<IProps & RouteComponentProps> = () => {
+    const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
-    const [provider, setprovider] = useState(params.get('provider') || 'netease');
-    const [keyword, setkeyword] = useState(params.get('keyword') || 'ferrari');
-    const [page, setpage] = useState(Number(params.get('page')) || 1);
+    const params = new URLSearchParams(history.location.search);
+    const [provider, setprovider] = useState<string>(params.get('provider') || ProviderType.网易云);
+    const [keyword, setkeyword] = useState<string>(params.get('keyword') || 'sia'); // 当前搜索关键词
+    const [page, setpage] = useState<number>(Number(params.get('page')) || 1); // 页码
+
     const [currentIndex, setcurrentIndex] = useState(0);
     const [width, setwidth] = useState(1080);
-    const [currentList, setcurrentList] = useState<ISong[]>([]);
     const [name, setname] = useState('');
     const audioRef = React.createRef<ReactAudioPlayer>();
     const [autoPlay, setautoPlay] = useState(false);
+    const [singer, setsinger] = useState<IAlbum[]>([]); // 歌手名字
 
     const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
         getWidth();
-        init(provider, keyword, page);
     }, []);
 
     const getWidth = () => {
@@ -46,10 +48,14 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
         setwidth(width!);
     };
     const init = (p: string, k: string, page: number) => {
+        setkeyword(k);
+        setprovider(p);
+        setpage(page);
         rootDispatcher.getSongList({ provider: p, keyword: k, page });
     };
     const play = async (record: ISong) => {
         setautoPlay(true);
+        setsinger(record.artists);
         setname(record.name);
         await playSong(record.platform, record.originalId)
             .then((res) => {
@@ -89,7 +95,6 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
     };
     const playAll = async () => {
         setautoPlay(true);
-        setcurrentList(songsList);
         play(songsList[currentIndex]);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
@@ -102,18 +107,26 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
             setautoPlay(false);
         }
     };
+    const receiveQuery = (form: ISongForm) => {
+        history.replace(`/songs/list?provider=${form.provider}&keyword=${form.keyword}&page=1`);
+        init(form.provider, form.keyword, form.page);
+    };
     return (
         <div>
             <Skeleton active loading={loading}>
+                <SongsForm sendListQuery={receiveQuery}/>
                 <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
                 <Table
                     columns={columns}
                     dataSource={songsList}
-                    pagination={{ total, onChange: changeSize, showSizeChanger: false }}
+                    pagination={{ current: page, total, onChange: changeSize, showSizeChanger: false }}
                 />
             </Skeleton>
             <div className={style.player}>
-                {name && <div className={style.currentSong}>当前播放：{name}</div>}
+                <div className={style.currentSong}>
+                    <span className={style.songName}>{name}</span>
+                    {singer.map((item) => item.name + ' ')}
+                </div>
                 <ReactAudioPlayer
                     ref={audioRef}
                     className={style.audio}
@@ -123,6 +136,7 @@ const SongsList: FC<IProps & RouteComponentProps> = (props) => {
                     onEnded={(e) => handleEnd(e)}
                     muted={meted}
                 />
+                {currentSongUrl && <div className={style.provider}>{provider}</div>}
             </div>
         </div>
     );

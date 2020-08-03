@@ -1,10 +1,10 @@
-import React, { FC, useState, useEffect, SyntheticEvent } from 'react';
+import React, { FC, useState, SyntheticEvent, useEffect } from 'react';
 import { Table, Skeleton, Button, message } from 'antd';
 import ReactAudioPlayer from 'react-audio-player';
 import style from '../songs-list/songs-list.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { songsColumn } from '../songs-list/columns';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, useHistory } from 'react-router';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { ISong, IAlbum } from '../../../../redux/reducer/song';
 import { SongDispatcher } from '../../../../redux/action/songs';
@@ -20,28 +20,29 @@ export interface ISongState {
     loading: boolean;
 }
 
-const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
+const HotSongs: FC<IProps & RouteComponentProps> = () => {
+    const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [meted, setmeted] = useState<boolean>(false);
     const dispatcher = useDispatch();
     const rootDispatcher = new SongDispatcher(dispatcher);
     const [width, setwidth] = useState<number>(1080);
     const [autoPlay, setautoPlay] = useState<boolean>(false);
-    const params = new URLSearchParams(props.location.search);
-    const [provider, setprovider] = useState<string>(params.get('provider') || 'netease'); // 当前平台
-    const [keyword, setkeyword] = useState<string>(params.get('keyword') || 'sia'); // 当前搜索关键词
-    const [page, setpage] = useState<number>(Number(params.get('page')) || 1); // 页码
+
+    const [provider, setprovider] = useState<string>(''); // 当前平
+    const [keyword, setkeyword] = useState<string>(''); // 当前搜索关键词
+    const [page, setpage] = useState<number>(1); // 页码
     const [currentIndex, setcurrentIndex] = useState(0); // 当前索引
+
     const [name, setname] = useState<string>(''); // 当前歌名
     const [time, settime] = useState<number>(0); // 累计听歌时间
     const [singer, setsinger] = useState<IAlbum[]>([]); // 歌手名字
 
     const { songsList, loading } = useSelector((state: RootState) => state.song);
+
     useEffect(() => {
         getWidth();
-        rootDispatcher.getHotSong('netease');
     }, []);
-
     const play = async (record: ISong) => {
         setname(record.name);
         setsinger(record.artists);
@@ -73,7 +74,6 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
         setwidth(width!);
     };
     const playAll = async () => {
-        setprovider(params.get('provider') || 'netease');
         setautoPlay(true);
         play(songsList[currentIndex]);
     };
@@ -87,22 +87,26 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
             setcurrentIndex(0);
         }
     };
+    const receiveQuery = (val: string) => {
+        history.replace(`/songs/hot?provider=${val}`);
+        setprovider(val);
+        rootDispatcher.getHotSong(val);
+    };
     const columns = songsColumn(width, play, download);
     return (
         <div>
-            <SongsForm/>
+            <SongsForm sendHotQuery={receiveQuery}/>
             <Skeleton active loading={loading}>
             <div>
                 <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
                 {/* <span>累计听歌时间：{time}</span> */}
             </div>
-
                 <Table columns={columns} dataSource={songsList} pagination={false} />
             </Skeleton>
             <div className={style.player}>
                 <div className={style.currentSong}>
                     <span className={style.songName}>{name}</span>
-                    {singer.map(item => item.name)}
+                    {singer.map(item => item.name + ' ')}
                 </div>
                 <ReactAudioPlayer
                     src={currentSongUrl}
@@ -113,7 +117,7 @@ const HotSongs: FC<IProps & RouteComponentProps> = (props) => {
                     muted={meted}
                     children={<Button type="link">download</Button>}
                 />
-                <div>{provider}</div>
+                <div className={style.provider}>{provider}</div>
             </div>
         </div>
     );

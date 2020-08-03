@@ -31,7 +31,6 @@ const HeaderLayout: FC = (props: IProps) => {
             <Header>
                 <div className={style.search}>
                     <div className={style.avator} onClick={() => (window.location.href = '/')}></div>
-                    {/* <SongsForm /> */}
                 </div>
                 <span>{cname}&nbsp;&nbsp;{cip}</span>
                 <span onClick={() => setavator(Math.floor(Math.random() * (5)) + 1)}>

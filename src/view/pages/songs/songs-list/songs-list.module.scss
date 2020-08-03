@@ -20,6 +20,11 @@
 .currentSong {
     color: #808080;
     line-height: 5;
+    max-width: 15rem;
+    position: inherit;
+    left: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .playAll {
@@ -31,6 +36,14 @@
     color: #000;
     margin-right: 8px;
     font-size: 16px;
+}
+
+.provider {
+    color: #808080;
+    line-height: 2;
+    position: inherit;
+    right: 5rem;
+    font-size: 2rem;
 }
 
 @media only screen and (max-width: 600px) {

@@ -7,7 +7,6 @@ import SongsList from './view/pages/songs/songs-list/songs-list';
 import Home from './view/home/Home';
 import SignUp from './view/sign-up/sign-up';
 import HotSongs from './view/pages/songs/hot-songs/hot-songs';
-// import SongsHome from './view/pages/songs/song-home';
 import NewsHome from './view/pages/news/index';
 
 const App = () => {
@@ -26,7 +25,6 @@ const App = () => {
                     <Route exact path="/signUp" component={SignUp} />
                     <PrivateRoute path="/" Component={Home} />
                 </Switch>
-                {/* <PrivateRoute path="/songs" Component={SongsHome} /> */}
                 <PrivateRoute path="/songs/list" Component={SongsList} />
                 <PrivateRoute path="/songs/hot" Component={HotSongs} />
 

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Card } from 'antd';
 import Meta from 'antd/lib/card/Meta';
-import songsImg from '../../../src/static/img/sia.jpg';
+import songsImg from '../../../src/static/img/troye.jpeg';
 import newsImg from '../../../src/static/img/WechatIMG2.jpeg';
 import nothing from '../../../src/static/img/WechatIMG3.jpeg';
 import style from './Home.module.scss';
