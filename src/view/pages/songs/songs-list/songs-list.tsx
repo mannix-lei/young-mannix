@@ -66,6 +66,7 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
             .catch(() => {
                 message.error('获取播放信息失败，请重试');
             });
+        const timer = setInterval(() => marquee(), 20);
     };
 
     const download = async (platform: string, id: string, name: string) => {
@@ -113,6 +114,16 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
         history.replace(`/songs/list?provider=${form.provider}&keyword=${form.keyword}&page=1`);
         init(form.provider, form.keyword, form.page);
     };
+    const marquee = () => {
+        const box = document.getElementById('box');
+        const songName = document.getElementById('divList');
+        const singername = document.getElementById('copyDiv');
+        if (singername!.offsetLeft - box!.scrollLeft <= -110) {
+            box!.scrollLeft -= songName!.offsetWidth - singername!.clientWidth;
+        } else {
+            box!.scrollLeft++;
+        }
+    };
     return (
         <div>
             <SongsForm sendListQuery={receiveQuery} inputDisable={loading}/>
@@ -125,9 +136,11 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
                 />
             </Skeleton>
             <div className={style.player}>
-                <div className={style.currentSong}>
-                    <span className={style.songName}>{name}</span>
-                    {singer.map((item) => item.name + ' ')}
+                <div id="box" style={{ width: '15rem', overflow: 'hidden', position: 'absolute', left: '5rem' }}>
+                    <div className={style.currentSong} id="divList" style={{ width: '50rem' }}>
+                        <div className={style.songName}>{name}</div>
+                        <div id="copyDiv" style={{ float: 'left', marginLeft: '2rem', lineHeight: '5' }}>{singer.map(item => item.name + ' ')}</div>
+                    </div>
                 </div>
                 <ReactAudioPlayer
                     ref={audioRef}
@@ -137,7 +150,7 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
                     controls
                     onEnded={(e) => handleEnd(e)}
                 />
-                {currentSongUrl && <div className={style.provider}>{provider}</div>}
+                <div className={style.provider}>{provider}</div>
             </div>
         </div>
     );

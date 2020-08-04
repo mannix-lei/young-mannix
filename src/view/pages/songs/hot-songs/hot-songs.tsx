@@ -37,8 +37,10 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
     const play = async (record: ISong) => {
         setname(record.name);
         setsinger(record.artists);
+        setautoPlay(true);
         const data = await playSong(record.platform, record.originalId);
         setcurrentSongUrl(data.songSource);
+        const timer = setInterval(() => marquee(), 20);
     };
     const download = async (platform: string, id: string, name: string) => {
         await playSong(platform, id)
@@ -93,6 +95,17 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
             setloading(false);
         });
     };
+    const marquee = () => {
+        const box = document.getElementById('box');
+        const songName = document.getElementById('divList');
+        const singername = document.getElementById('copyDiv');
+        if (singername!.offsetLeft - box!.scrollLeft <= -110) {
+            box!.scrollLeft -= songName!.offsetWidth - singername!.clientWidth;
+        } else {
+            box!.scrollLeft++;
+        }
+    };
+
     const columns = songsColumn(width, play, download);
     return (
         <div>
@@ -102,9 +115,11 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
             </div>
             <Skeleton active loading={loading}><Table columns={columns} dataSource={songsList} pagination={false} /></Skeleton>
             <div className={style.player}>
-                <div className={style.currentSong}>
-                    <span className={style.songName}>{name}</span>
-                    {singer.map(item => item.name + ' ')}
+                <div id="box" style={{ width: '15rem', overflow: 'hidden', position: 'absolute', left: '5rem' }}>
+                    <div className={style.currentSong} id="divList" style={{ width: '50rem' }}>
+                        <div className={style.songName}>{name}</div>
+                        <div id="copyDiv" style={{ float: 'left', marginLeft: '2rem', lineHeight: '5' }}>{singer.map(item => item.name + ' ')}</div>
+                    </div>
                 </div>
                 <ReactAudioPlayer
                     src={currentSongUrl}

@@ -9,22 +9,19 @@
     box-shadow: 0 0 10px rgba(0,0,0,.12);
     display: flex;
     justify-content: space-evenly;
+    overflow: hidden;
 }
 
 .audio {
     width: 45rem;
     margin-top: 0.5rem;
     border-radius: 5px;
+    position: inherit;
 }
 
 .currentSong {
     color: #808080;
-    line-height: 5;
-    max-width: 15rem;
-    position: inherit;
-    left: 5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 4;
 }
 
 .playAll {
@@ -34,8 +31,9 @@
 
 .songName {
     color: #000;
-    margin-right: 8px;
     font-size: 16px;
+    float: left;
+    margin-left: 5rem;
 }
 
 .provider {
