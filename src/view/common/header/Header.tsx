@@ -19,13 +19,11 @@ const HeaderLayout: FC = (props: IProps) => {
     const dispatcher = useDispatch();
     const rootDispatcher = new CityDispatcher(dispatcher);
     const { cip, cname } = useSelector((state: RootState) => state.city);
-    const { loading } = useSelector((state: RootState) => state.loading);
     const [avator, setavator] = useState<number>(Math.floor(Math.random() * (5)) + 1);
 
     useEffect(() => {
         rootDispatcher.getLocalCity();
     }, []);
-
     return (
         <Layout className={style.layout}>
             <Header>
@@ -38,9 +36,7 @@ const HeaderLayout: FC = (props: IProps) => {
                 </span>
             </Header>
             <Content className={style.content}>
-                <Skeleton active loading={loading}>
-                    <div className="site-layout-content">{props.children}</div>
-                </Skeleton>
+                <div className="site-layout-content">{props.children}</div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Young Mannix ©2020 Created by Mannix Lei</Footer>
         </Layout>

@@ -3,13 +3,10 @@ import { Table, Skeleton, message, Button } from 'antd';
 import { songsColumn } from './columns';
 import ReactAudioPlayer from 'react-audio-player';
 import style from './songs-list.module.scss';
-import { useSelector, useDispatch } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { ISong, ISongForm, IAlbum } from '../../../../redux/reducer/song';
-import { SongDispatcher } from '../../../../redux/action/songs';
-import { RootState } from '../../../../redux';
-import { playSong } from '../../../../service/songs';
+import { playSong, initSongsList } from '../../../../service/songs';
 import SongsForm, { ProviderType } from '../songs-form/songs-form';
 
 interface IProps {}
@@ -17,15 +14,11 @@ interface IProps {}
 export interface ISongState {
     songsList: ISong[];
     total: number;
-    loading: boolean;
 }
 
 const SongsList: FC<IProps & RouteComponentProps> = () => {
     const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
-    const [meted, setmeted] = useState(false);
-    const dispatcher = useDispatch();
-    const rootDispatcher = new SongDispatcher(dispatcher);
     const params = new URLSearchParams(history.location.search);
     const [provider, setprovider] = useState<string>(params.get('provider') || ProviderType.网易云);
     const [keyword, setkeyword] = useState<string>(params.get('keyword') || 'sia'); // 当前搜索关键词
@@ -37,8 +30,10 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
     const audioRef = React.createRef<ReactAudioPlayer>();
     const [autoPlay, setautoPlay] = useState(false);
     const [singer, setsinger] = useState<IAlbum[]>([]); // 歌手名字
+    const [loading, setloading] = useState<boolean>(false);
+    const [list, setlist] = useState<ISong[]>([]);
+    const [total, settotal] = useState<number>(0);
 
-    const { songsList, total, loading } = useSelector((state: RootState) => state.song);
     useEffect(() => {
         getWidth();
     }, []);
@@ -47,11 +42,18 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
         const width = document.querySelector('body')?.offsetWidth;
         setwidth(width!);
     };
-    const init = (p: string, k: string, page: number) => {
+    const init = async (p: string, k: string, page: number) => {
         setkeyword(k);
         setprovider(p);
         setpage(page);
-        rootDispatcher.getSongList({ provider: p, keyword: k, page });
+        setloading(true);
+        await initSongsList({ page, provider: p, keyword: k }).then((res) => {
+            setlist(res.songs);
+            settotal(res.totalCount);
+            setloading(false);
+        }).catch(() => {
+            setloading(false);
+        });
     };
     const play = async (record: ISong) => {
         setautoPlay(true);
@@ -95,12 +97,12 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
     };
     const playAll = async () => {
         setautoPlay(true);
-        play(songsList[currentIndex]);
+        play(list[currentIndex]);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
-        if (currentIndex < songsList.length - 1) {
+        if (currentIndex < list.length - 1) {
             setcurrentIndex(currentIndex + 1);
-            play(songsList[currentIndex + 1]);
+            play(list[currentIndex + 1]);
         } else {
             setname('');
             setcurrentIndex(0);
@@ -113,12 +115,12 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
     };
     return (
         <div>
+            <SongsForm sendListQuery={receiveQuery} inputDisable={loading}/>
             <Skeleton active loading={loading}>
-                <SongsForm sendListQuery={receiveQuery}/>
                 <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
                 <Table
                     columns={columns}
-                    dataSource={songsList}
+                    dataSource={list}
                     pagination={{ current: page, total, onChange: changeSize, showSizeChanger: false }}
                 />
             </Skeleton>
@@ -134,7 +136,6 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
                     autoPlay={autoPlay}
                     controls
                     onEnded={(e) => handleEnd(e)}
-                    muted={meted}
                 />
                 {currentSongUrl && <div className={style.provider}>{provider}</div>}
             </div>

@@ -20,7 +20,6 @@ export class SongDispatcher {
                 payload: {
                     songsList: res.songs,
                     total: res.totalCount || res.songs.length,
-                    loading: false,
                 },
             });
         });
@@ -32,7 +31,6 @@ export class SongDispatcher {
                 payload: {
                     songsList: res.songs,
                     total: res.totalCount || res.songs.length,
-                    loading: false,
                 },
             });
         });

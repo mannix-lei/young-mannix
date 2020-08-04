@@ -2,14 +2,11 @@ import React, { FC, useState, SyntheticEvent, useEffect } from 'react';
 import { Table, Skeleton, Button, message } from 'antd';
 import ReactAudioPlayer from 'react-audio-player';
 import style from '../songs-list/songs-list.module.scss';
-import { useSelector, useDispatch } from 'react-redux';
 import { songsColumn } from '../songs-list/columns';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { ISong, IAlbum } from '../../../../redux/reducer/song';
-import { SongDispatcher } from '../../../../redux/action/songs';
-import { RootState } from '../../../../redux';
-import { playSong } from '../../../../service/songs';
+import { playSong, initHotSong } from '../../../../service/songs';
 import SongsForm from '../songs-form/songs-form';
 
 interface IProps {}
@@ -17,28 +14,22 @@ interface IProps {}
 export interface ISongState {
     songsList: ISong[];
     total: number;
-    loading: boolean;
 }
 
 const HotSongs: FC<IProps & RouteComponentProps> = () => {
     const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
-    const [meted, setmeted] = useState<boolean>(false);
-    const dispatcher = useDispatch();
-    const rootDispatcher = new SongDispatcher(dispatcher);
     const [width, setwidth] = useState<number>(1080);
     const [autoPlay, setautoPlay] = useState<boolean>(false);
 
     const [provider, setprovider] = useState<string>(''); // 当前平
-    const [keyword, setkeyword] = useState<string>(''); // 当前搜索关键词
-    const [page, setpage] = useState<number>(1); // 页码
     const [currentIndex, setcurrentIndex] = useState(0); // 当前索引
 
     const [name, setname] = useState<string>(''); // 当前歌名
-    const [time, settime] = useState<number>(0); // 累计听歌时间
     const [singer, setsinger] = useState<IAlbum[]>([]); // 歌手名字
-
-    const { songsList, loading } = useSelector((state: RootState) => state.song);
+    const [songsList, setsongsList] = useState<ISong[]>([]);
+    const [total, settotal] = useState<number>(0);
+    const [loading, setloading] = useState<boolean>(false);
 
     useEffect(() => {
         getWidth();
@@ -90,19 +81,26 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
     const receiveQuery = (val: string) => {
         history.replace(`/songs/hot?provider=${val}`);
         setprovider(val);
-        rootDispatcher.getHotSong(val);
+        initList(val);
+    };
+    const initList = async (p: string) => {
+        setloading(true);
+        await initHotSong(p).then((res) => {
+            setsongsList(res.songs);
+            settotal(res.totalCount);
+            setloading(false);
+        }).catch(() => {
+            setloading(false);
+        });
     };
     const columns = songsColumn(width, play, download);
     return (
         <div>
-            <SongsForm sendHotQuery={receiveQuery}/>
-            <Skeleton active loading={loading}>
+            <SongsForm sendHotQuery={receiveQuery} tabDisable={loading}/>
             <div>
                 <Button type="link" className={style.playAll} icon={<PlayCircleOutlined />} onClick={() => playAll()}>播放全部</Button>
-                {/* <span>累计听歌时间：{time}</span> */}
             </div>
-                <Table columns={columns} dataSource={songsList} pagination={false} />
-            </Skeleton>
+            <Skeleton active loading={loading}><Table columns={columns} dataSource={songsList} pagination={false} /></Skeleton>
             <div className={style.player}>
                 <div className={style.currentSong}>
                     <span className={style.songName}>{name}</span>
@@ -114,7 +112,6 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
                     className={style.audio}
                     controls
                     onEnded={(e) => handleEnd(e)}
-                    muted={meted}
                     children={<Button type="link">download</Button>}
                 />
                 <div className={style.provider}>{provider}</div>

@@ -1,7 +1,8 @@
 import { Reducer, Action } from 'redux';
 
 export enum LoadingActionType {
-    setLoading,
+    startLoading,
+    stopLoading,
 }
 export interface IInitialState {
     loading: boolean;
@@ -19,8 +20,10 @@ export const loadingReducer: Reducer<IInitialState, IDispatchAction> = (
     action
 ) => {
     switch (action.type) {
-        case LoadingActionType.setLoading:
-            return { ...state, ...action.payload };
+        case LoadingActionType.startLoading:
+            return { loading: true };
+        case LoadingActionType.stopLoading:
+            return { loading: false };
         default:
             return state;
     }

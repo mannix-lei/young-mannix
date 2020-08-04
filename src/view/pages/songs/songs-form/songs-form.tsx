@@ -20,6 +20,8 @@ export enum ListType {
 }
 
 interface IProps {
+    tabDisable?: boolean;
+    inputDisable?: boolean;
     style?: React.CSSProperties;
     sendHotQuery?: (p: string) => void;
     sendListQuery?: (query: ISongForm) => void;
@@ -58,7 +60,7 @@ const SongsForm: FC<IProps> = (props) => {
         setprovider(value);
     };
     const selectAfter = (
-        <Select defaultValue={provider} className="select-after" onChange={(value) => handleSelectProvider(value)}>
+        <Select defaultValue={provider} disabled={props.inputDisable} className="select-after" onChange={(value) => handleSelectProvider(value)}>
             <Select.Option value={ProviderType.网易云}>网易云</Select.Option>
             <Select.Option value={ProviderType.QQ}>QQ</Select.Option>
             <Select.Option value={ProviderType.虾米}>虾米</Select.Option>
@@ -77,6 +79,7 @@ const SongsForm: FC<IProps> = (props) => {
             {history.location.pathname === '/songs/hot' && (
                 <Form.Item label="" name="provider">
                     <Radio.Group
+                        disabled={props.tabDisable}
                         buttonStyle="solid"
                         defaultValue={provider}
                         value={provider}
@@ -98,6 +101,7 @@ const SongsForm: FC<IProps> = (props) => {
             )}
             <Form.Item label="" name="keyword">
                 <Input
+                    disabled={props.inputDisable}
                     maxLength={30}
                     addonAfter={selectAfter}
                     placeholder="please input something~"

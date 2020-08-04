@@ -12,7 +12,10 @@ export class LoadingDispatcher {
         this.dispatch = dispatch;
     }
 
-    public setLoading = async (loading: boolean) => {
-        this.dispatch({ type: LoadingActionType.setLoading, payload: { loading }});
+    public startLoading = async (loading: boolean) => {
+        this.dispatch({ type: LoadingActionType.startLoading, payload: { loading }});
+    }
+    public stopLoading = async (loading: boolean) => {
+        this.dispatch({ type: LoadingActionType.stopLoading, payload: { loading }});
     }
 }

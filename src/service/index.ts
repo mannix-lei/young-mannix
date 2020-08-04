@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { notification } from 'antd';
+import NProgress from 'nprogress';
 
 const instance = Axios.create({
     baseURL: '',
@@ -8,15 +9,18 @@ const instance = Axios.create({
 
 instance.interceptors.request.use(
     (config) => {
+        NProgress.start();
         return config;
     },
     (err) => {
+        NProgress.done();
         return Promise.reject(err);
     }
 );
 
 instance.interceptors.response.use(
     (response) => {
+        NProgress.done();
         if (response.config.url === '/cityapi/cityjson') {
             return JSON.parse(response.data.match(/{[^}{]*?}/g)[0]);
         }

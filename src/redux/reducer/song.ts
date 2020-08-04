@@ -25,13 +25,11 @@ export interface IAlbum {
 export interface ISongInitial {
     songsList: ISong[];
     total: number;
-    loading: boolean;
 }
 
 const initState: ISongInitial = {
     songsList: [],
     total: 0,
-    loading: true,
 };
 
 export interface ISongQuery {
@@ -58,14 +56,12 @@ export const songReducer: Reducer<ISongInitial, ISongDispatchAction> = (
             return {
                 songsList: action.payload.songsList!,
                 total: action.payload.total!,
-                loading: action.payload.loading!,
             };
         case SongActionType.GetHotSong:
             return {
                 ...state,
                 songsList: action.payload.songsList!,
                 total: action.payload.total!,
-                loading: action.payload.loading!,
             };
         default:
             return state;
