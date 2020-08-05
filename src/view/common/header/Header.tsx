@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { Layout, Avatar, Skeleton } from 'antd';
+import { Layout, Avatar } from 'antd';
 import style from './Header.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { CityDispatcher } from '../../../redux/action/city';
@@ -31,12 +31,22 @@ const HeaderLayout: FC = (props: IProps) => {
                     <div className={style.avator} onClick={() => (window.location.href = '/')}></div>
                 </div>
                 <span>{cname}&nbsp;&nbsp;{cip}</span>
+                {/* <Radio.Group value={locale} onChange={changeLocale}>
+                    <Radio.Button key="en" value={enUS}>
+                    English
+                    </Radio.Button>
+                    <Radio.Button key="cn" value={zhCN}>
+                    中文
+                    </Radio.Button>
+                </Radio.Group> */}
                 <span onClick={() => setavator(Math.floor(Math.random() * (5)) + 1)}>
                     <Avatar className={style.loginAvatar} src={`http://api.rosysun.cn/sjtx/?type=${avator}`} />
                 </span>
             </Header>
             <Content className={style.content}>
+                {/* <ConfigProvider locale={locale}> */}
                 <div className="site-layout-content">{props.children}</div>
+                {/* </ConfigProvider> */}
             </Content>
             <Footer style={{ textAlign: 'center' }}>Young Mannix ©2020 Created by Mannix Lei</Footer>
         </Layout>
