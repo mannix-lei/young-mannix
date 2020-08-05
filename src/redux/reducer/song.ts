@@ -15,6 +15,7 @@ export interface ISong {
     hasCopyright: boolean;
     fee: number;
     platform: string;
+    playing: boolean;
 }
 
 export interface IAlbum {

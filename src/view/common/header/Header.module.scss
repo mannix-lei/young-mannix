@@ -40,6 +40,10 @@
     padding: 24px 50px;
     background: #fff; 
     overflow: scroll;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:cover;
+    background-image: url(http://www.dmoe.cc/random.php?233335556958);
 }
 .loginAvatar {
     background-color: #87d068;

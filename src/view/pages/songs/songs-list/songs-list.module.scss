@@ -1,3 +1,10 @@
+.body {
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:cover;
+    background-image: url(http://www.dmoe.cc/random.php?233335556958);
+}
+
 .player {
     position: absolute;
     bottom: 0;
@@ -6,7 +13,7 @@
     background: #fff;
     height: 70px;
     text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,.12);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
     display: flex;
     justify-content: space-evenly;
     overflow: hidden;
@@ -44,6 +51,18 @@
     font-size: 2rem;
 }
 
+.palying {
+    font-size: 1.5rem;
+    animation:rotating 2s linear infinite;
+    @keyframes rotating {
+        from {
+            transform: rotate(0);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
 @media only screen and (max-width: 600px) {
     .hide {
         display: none;

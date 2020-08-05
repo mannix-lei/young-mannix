@@ -9,14 +9,12 @@ import { ISong, ISongForm, IAlbum } from '../../../../redux/reducer/song';
 import { playSong, initSongsList } from '../../../../service/songs';
 import SongsForm, { ProviderType } from '../songs-form/songs-form';
 
-interface IProps {}
-
 export interface ISongState {
     songsList: ISong[];
     total: number;
 }
 
-const SongsList: FC<IProps & RouteComponentProps> = () => {
+const SongsList: FC<RouteComponentProps> = () => {
     const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const params = new URLSearchParams(history.location.search);
@@ -24,11 +22,10 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
     const [keyword, setkeyword] = useState<string>(params.get('keyword') || 'sia'); // 当前搜索关键词
     const [page, setpage] = useState<number>(Number(params.get('page')) || 1); // 页码
 
-    const [currentIndex, setcurrentIndex] = useState(0);
-    const [width, setwidth] = useState(1080);
-    const [name, setname] = useState('');
-    const audioRef = React.createRef<ReactAudioPlayer>();
-    const [autoPlay, setautoPlay] = useState(false);
+    const [currentIndex, setcurrentIndex] = useState<number>(0);
+    const [width, setwidth] = useState<number>(1080);
+    const [name, setname] = useState<string>('');
+    const [autoPlay, setautoPlay] = useState<boolean>(false);
     const [singer, setsinger] = useState<IAlbum[]>([]); // 歌手名字
     const [loading, setloading] = useState<boolean>(false);
     const [list, setlist] = useState<ISong[]>([]);
@@ -48,7 +45,8 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
         setpage(page);
         setloading(true);
         await initSongsList({ page, provider: p, keyword: k }).then((res) => {
-            setlist(res.songs);
+            const list = res.songs.map((item) => ({ palying: false, ...item }));
+            setlist(list);
             settotal(res.totalCount);
             setloading(false);
         }).catch(() => {
@@ -56,6 +54,9 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
         });
     };
     const play = async (record: ISong) => {
+        const tempList = list;
+        tempList[tempList.findIndex(item => item.originalId === record.originalId)].playing = true;
+        setlist(tempList);
         setautoPlay(true);
         setsinger(record.artists);
         setname(record.name);
@@ -98,10 +99,14 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
     };
     const playAll = async () => {
         setautoPlay(true);
-        play(list[currentIndex]);
+        setcurrentIndex(0);
+        play(list[0]);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < list.length - 1) {
+            const tempList = list;
+            tempList[currentIndex].playing = false;
+            setlist(tempList);
             setcurrentIndex(currentIndex + 1);
             play(list[currentIndex + 1]);
         } else {
@@ -143,7 +148,6 @@ const SongsList: FC<IProps & RouteComponentProps> = () => {
                     </div>
                 </div>
                 <ReactAudioPlayer
-                    ref={audioRef}
                     className={style.audio}
                     src={currentSongUrl}
                     autoPlay={autoPlay}

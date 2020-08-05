@@ -9,14 +9,12 @@ import { ISong, IAlbum } from '../../../../redux/reducer/song';
 import { playSong, initHotSong } from '../../../../service/songs';
 import SongsForm from '../songs-form/songs-form';
 
-interface IProps {}
-
 export interface ISongState {
     songsList: ISong[];
     total: number;
 }
 
-const HotSongs: FC<IProps & RouteComponentProps> = () => {
+const HotSongs: FC<RouteComponentProps> = () => {
     const history = useHistory();
     const [currentSongUrl, setcurrentSongUrl] = useState('');
     const [width, setwidth] = useState<number>(1080);
@@ -35,6 +33,9 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
         getWidth();
     }, []);
     const play = async (record: ISong) => {
+        const tempList = songsList;
+        tempList[tempList.findIndex(item => item.originalId === record.originalId)].playing = true;
+        setsongsList(tempList);
         setname(record.name);
         setsinger(record.artists);
         setautoPlay(true);
@@ -68,10 +69,14 @@ const HotSongs: FC<IProps & RouteComponentProps> = () => {
     };
     const playAll = async () => {
         setautoPlay(true);
-        play(songsList[currentIndex]);
+        setcurrentIndex(0);
+        play(songsList[0]);
     };
     const handleEnd = (_e: SyntheticEvent<HTMLAudioElement, Event>) => {
         if (currentIndex < songsList.length - 1) {
+            const tempList = songsList;
+            tempList[currentIndex].playing = false;
+            setsongsList(tempList);
             setcurrentIndex(currentIndex + 1);
             play(songsList[currentIndex + 1]);
         } else {

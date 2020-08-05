@@ -1,17 +1,23 @@
 import React from 'react';
 import { Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { PlayCircleOutlined, DownloadOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, DownloadOutlined, PlayCircleFilled } from '@ant-design/icons';
 import style from './songs-list.module.scss';
 import { ISong } from '../../../../redux/reducer/song';
 
 export const songsColumn: (width: number, play: (item: ISong) => void, download: (platform: string, id: string, name: string) => void) => ColumnsType<ISong> = (
     width,
     play,
-    download
+    download,
 ) => {
     return width > 600
         ? [
+              {
+                  width: '3rem',
+                  render: (_TEXT, record, index) => (
+                      <span>{record.playing ? <PlayCircleFilled className={style.palying} /> : index + 1}</span>
+                  ),
+              },
               {
                   title: 'song-name',
                   dataIndex: 'name',
