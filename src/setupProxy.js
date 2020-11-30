@@ -23,6 +23,7 @@ module.exports = function (app) {
             pathRewrite: function (path, req) { return path.replace('/avatorapi', '') },
         },
     };
+    
     Object.entries(proxyInfos).forEach(([key, proxyInfo]) => {
         app.use(createProxyMiddleware(key, proxyInfo));
     });
