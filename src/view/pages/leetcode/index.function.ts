@@ -33,4 +33,40 @@ export const list: IFunctionList[] = [
         };`,
         link: 'https://leetcode-cn.com/problems/reformat-the-string/',
     },
+    {
+        title: '字母映射',
+        content:
+            "给你一个字符串 s，它由数字（'0' - '9'）和 '#' 组成。我们希望按下述规则将 s 映射为一些小写英文字符：字符（'a' - 'i'）分别用（'1' - '9'）表示。字符（'j' - 'z'）分别用（'10#' - '26#'）表示。返回映射之后形成的新字符串。题目数据保证映射始终唯一。",
+        method: `
+        /**
+         * @param {string} s
+         * @return {string}
+         */
+        var freqAlphabets = function(s) {
+        var arr = [];
+                var res = '';
+                arr = s.split( '#' );
+                arr.map( ( item, index ) => {
+                    if ( index < arr.length - 1 ) {
+                        if ( Number( item ) > 9 && Number( item ) <= 26 ) {
+                            res = res + String.fromCharCode( Number( item ) + 96 );
+                        } else {
+                            var temp = arr[ index ];
+                            while ( temp > 26 ) {
+                                res = res + String.fromCharCode( Number( temp.split( '' )[ 0 ] ) + 96 )
+                                temp = temp.split( '' ).splice( 1, temp.length ).join( '' );
+                            }
+                            res = res + String.fromCharCode( Number( temp ) + 96 );
+                        }
+                    }
+                } );
+                if ( arr[ arr.length - 1 ] ) {
+                    for ( const item of arr[ arr.length - 1 ] ) {
+                        res = res + String.fromCharCode( Number( item ) + 96 )
+                    }
+                }
+                return res;
+        };`,
+        link: '',
+    },
 ];
