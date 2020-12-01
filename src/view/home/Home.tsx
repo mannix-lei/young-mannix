@@ -21,7 +21,7 @@ const Home: FC = () => {
                 <Meta title={<Link to={'/leetcode'}>练习算法~</Link>} description="coding..." />
             </Card>
             <Card hoverable className={style.card} cover={<img alt="listImg" src={nothing} />} onClick={() => history.push('')}>
-                <Meta title={<Link to={''}>后续板块陆续开启～～你好啊啦啦啦</Link>} description="敬请期待。。。mannix" />
+                <Meta title={<Link to={''}>后续板块陆续开启～～你好啊啦啦啦</Link>} description="敬请期待。。。 young mannix" />
             </Card>
         </div>
     );
