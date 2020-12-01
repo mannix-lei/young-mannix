@@ -7,7 +7,7 @@ const LeetCode: FC = () => {
     return (
         <div>
             {list.map((item) => (
-                <Card title={item.title} extra={<a href={item.link} target="_blank">前往</a>}>
+                <Card style={{ marginBottom: '20px' }} title={item.title} extra={<a href={item.link} target="_blank">前往</a>}>
                     <a className={style.content} href={item.link} target="_blank">{item.content}</a>
                     <pre className={style.code}>
                         <code>{item.method}</code>
