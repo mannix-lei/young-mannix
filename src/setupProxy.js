@@ -22,6 +22,12 @@ module.exports = function (app) {
             changeOrigin: true,
             pathRewrite: function (path, req) { return path.replace('/avatorapi', '') },
         },
+        '/history': {
+            target: 'https://baike.baidu.com/',
+            changeOrigin: true,
+            hostRewrite: false,
+            pathRewrite: function (path, req) { return path.replace('/history', '/cms/home/eventsOnHistory') },
+        },
     };
     Object.entries(proxyInfos).forEach(([key, proxyInfo]) => {
         app.use(createProxyMiddleware(key, proxyInfo));

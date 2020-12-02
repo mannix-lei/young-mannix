@@ -9,6 +9,7 @@ import SignUp from './view/sign-up/sign-up';
 import HotSongs from './view/pages/songs/hot-songs/hot-songs';
 import NewsHome from './view/pages/news/index';
 import LeetCode from './view/pages/leetcode/index';
+import History from './view/pages/history/history';
 
 const App = () => {
     const existingTokens = JSON.parse(localStorage.getItem('tokens')!);
@@ -31,6 +32,7 @@ const App = () => {
 
                 <PrivateRoute path="/news" Component={NewsHome} />
                 <PrivateRoute path="/leetcode" Component={LeetCode} />
+                <PrivateRoute path="/history" Component={History} />
             </Router>
         </AuthContext.Provider>
     );

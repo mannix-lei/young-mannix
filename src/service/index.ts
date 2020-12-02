@@ -24,6 +24,12 @@ instance.interceptors.response.use(
         if (response.config.url === '/cityapi/cityjson') {
             return JSON.parse(response.data.match(/{[^}{]*?}/g)[0]);
         }
+        if (/history/.test(response.config.url!)) {
+            console.log('====================================');
+            console.log(response.data);
+            console.log('====================================');
+            return response.data;
+        }
         if (response.status === 200) {
             return response.data.data;
         } else {

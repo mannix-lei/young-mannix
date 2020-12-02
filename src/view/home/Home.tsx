@@ -20,6 +20,9 @@ const Home: FC = () => {
             <Card hoverable className={style.card} cover={<img alt="listImg" src={newsImg} />} onClick={() => history.push('/leetcode')}>
                 <Meta title={<Link to={'/leetcode'}>看看算法~</Link>} description="coding..." />
             </Card>
+            <Card hoverable className={style.card} cover={<img alt="listImg" src={newsImg} />} onClick={() => history.push('/history')}>
+                <Meta title={<Link to={'/history'}>回顾历史~</Link>} description="历史上的今天..." />
+            </Card>
             <Card hoverable className={style.card} cover={<img alt="listImg" src={nothing} />} onClick={() => history.push('')}>
                 <Meta title={<Link to={''}>后续板块陆续开启～</Link>} description="敬请期待..." />
             </Card>
