@@ -24,10 +24,7 @@ instance.interceptors.response.use(
         if (response.config.url === '/cityapi/cityjson') {
             return JSON.parse(response.data.match(/{[^}{]*?}/g)[0]);
         }
-        if (/history/.test(response.config.url!)) {
-            console.log('====================================');
-            console.log(response.data);
-            console.log('====================================');
+        if (/history/.test(response.config.url!) || /weather/.test(response.config.url!)) {
             return response.data;
         }
         if (response.status === 200) {
