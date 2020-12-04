@@ -13,6 +13,6 @@ export const getCityInfo = async (cityname: string): Promise<ICityInfo[]> => {
  * 获取天气信息
  * @param woeid
  */
-export const getWeatherInfo = async (woeid: string) => {
+export const getWeatherInfo = async (woeid: number) => {
     return await service.get(`/weather/location/${woeid}/`);
 };

@@ -1,10 +1,10 @@
+import { Avatar, Button, Divider, List, Skeleton } from 'antd';
 import React, { FC, useEffect, useState } from 'react';
-import style from './news.module.scss';
-import { List, Avatar, Divider, Button, Skeleton } from 'antd';
-import { newsTypeList } from './index.function';
-import { getNewsList } from '../../../service/news';
-import { IInitialState } from '../../../redux/reducer/news';
 import { useHistory } from 'react-router-dom';
+import { IInitialState } from '../../../redux/reducer/news';
+import { getNewsList } from '../../../service/news';
+import { newsTypeList } from './index.function';
+import style from './news.module.scss';
 
 export enum NewsType {
     'zhihu' = '知乎热榜',
@@ -73,10 +73,10 @@ const NewsHome: FC = () => {
             <div>
                 {newsTypeList.map((item) => (
                     <span>
-                        <Button type="link" disabled={loading} onClick={() => handleChangeType(item.key)}>
+                        <Button type='link' disabled={loading} onClick={() => handleChangeType(item.key)}>
                             {item.value}
                         </Button>
-                        <Divider type="vertical" />
+                        <Divider type='vertical' />
                     </span>
                 ))}
             </div>
@@ -89,7 +89,7 @@ const NewsHome: FC = () => {
             </div>
             <Skeleton active loading={loading}>
                 <List
-                    itemLayout="horizontal"
+                    itemLayout='horizontal'
                     dataSource={newsData.list}
                     renderItem={(item) => (
                         <List.Item>
@@ -100,7 +100,7 @@ const NewsHome: FC = () => {
                                     />
                                 }
                                 title={
-                                    <a href={item.link} target="_blank">
+                                    <a href={item.link} target='_blank'>
                                         {item.title}
                                     </a>
                                 }
