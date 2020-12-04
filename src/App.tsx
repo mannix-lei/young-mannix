@@ -10,6 +10,7 @@ import HotSongs from './view/pages/songs/hot-songs/hot-songs';
 import NewsHome from './view/pages/news/index';
 import LeetCode from './view/pages/leetcode/index';
 import History from './view/pages/history/history';
+import Weather from './view/pages/weather/weather';
 
 const App = () => {
     const existingTokens = JSON.parse(localStorage.getItem('tokens')!);
@@ -33,6 +34,7 @@ const App = () => {
                 <PrivateRoute path="/news" Component={NewsHome} />
                 <PrivateRoute path="/leetcode" Component={LeetCode} />
                 <PrivateRoute path="/history" Component={History} />
+                <PrivateRoute path="/weather" Component={Weather} />
             </Router>
         </AuthContext.Provider>
     );

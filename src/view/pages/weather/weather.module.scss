@@ -1,0 +1,69 @@
+.weather {
+    position: relative;
+
+    :global {
+        .ant-card-contain-grid:not(.ant-card-loading) .ant-card-body {
+            display: flex;
+        }
+
+        .ant-tag-has-color {
+            border-color: transparent;
+            height: 2rem;
+            border-radius: 0;
+            line-height: 2rem;
+            font-size: 1rem;
+        }
+    }
+}
+
+.baseinfo {
+    display: inline-flex;
+    margin: 2rem 0;
+}
+
+.prediect {
+    width: 100%;
+    display: inline-flex;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+
+    .preInfo {
+        font-size: 1rem;
+        color: #a9a9a9;
+    }
+}
+
+.pItem {
+    cursor: pointer;
+    user-select: none;
+    width: 13.5rem;
+    padding: 1rem;
+    border: 2px solid #c0c0c0;
+    border-radius: 1rem;
+
+    img {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+    }
+}
+
+.pItem:hover {
+    border: 2px solid #000;
+    box-shadow: 8px 3px 10px 0px rgba(51, 51, 51, 0.2);
+    -webkit-transform: translateY(-3px);
+    -ms-transform: translateY(-3px);
+    transform: translateY(-3px);
+    -webkit-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+
+.origin {
+    display: inline-flex;
+    justify-content: flex-start;
+    line-height: 2rem;
+
+    a {
+        margin-left: 1rem;
+    }
+}
