@@ -1,12 +1,12 @@
+import 'antd/dist/antd.css';
+import 'nprogress/nprogress.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.module.scss';
-import 'antd/dist/antd.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import App from './App';
+import './index.module.scss';
 import store from './redux';
-import 'nprogress/nprogress.css';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <Provider store={store}>
