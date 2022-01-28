@@ -1,10 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Young Mannix Music WebSite (mobile & web all in one)
-
-In the project directory, you can:
+enjoy life
 
 ### `enjoy songs you like`
 
-[Young Mannix](http://42.192.173.213/)
+[Young Mannix](http://101.43.182.115/)
 
