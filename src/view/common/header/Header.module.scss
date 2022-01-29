@@ -37,18 +37,23 @@
     flex-grow: 1;
 }
 .content {
-    padding: 24px 40px;
+    padding: 24px 24px;
     background: #fff; 
     overflow: scroll;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size:cover;
     background-image: url(http://www.dmoe.cc/random.php?233335556958);
+    position: relative;
 }
 .loginAvatar {
     background-color: #87d068;
     margin-left: 2rem;
     cursor: pointer;
+}
+
+.site-layout-content {
+    position: relative;
 }
 
 @media only screen and (max-width: 600px) {

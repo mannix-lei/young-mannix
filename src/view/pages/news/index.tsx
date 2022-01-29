@@ -81,16 +81,16 @@ const NewsHome: FC = () => {
                 ))}
             </div>
             <div className={style.header}>
-                <div style={{ marginRight: '3rem' }}>更新时间: {newsData.last_update}</div>
+                <div style={{ marginRight: '3rem' }}>更新时间: {newsData?.last_update}</div>
                 <div>
-                    来自: <span className={style.source}>{newsData.name}</span>
+                    来自: <span className={style.source}>{newsData?.name}</span>
                 </div>
                 <div style={{ marginLeft: '3rem' }}>当前时间: {currentTime}</div>
             </div>
             <Skeleton active loading={loading}>
                 <List
                     itemLayout='horizontal'
-                    dataSource={newsData.list}
+                    dataSource={newsData?.list}
                     renderItem={(item) => (
                         <List.Item>
                             <List.Item.Meta
